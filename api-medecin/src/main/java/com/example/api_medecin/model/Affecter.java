@@ -21,9 +21,9 @@ public class Affecter {
     private Medecin medecin;
 
     @ManyToOne
-    @MapsId("patientId")
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
+    @MapsId("cabinetId")
+    @JoinColumn(name = "cabinet_id")
+    private Cabinet cabinet;
 
     @Column(name = "telephone", nullable = false)
     private String telephone;

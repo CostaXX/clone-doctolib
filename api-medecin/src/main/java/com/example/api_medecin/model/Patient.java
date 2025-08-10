@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "medecin")
+@Table(name = "patient")
 @Check(constraints = "sexe IN (0,1,2)")
 public class Patient {
     

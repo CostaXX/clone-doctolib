@@ -1,1 +1,2 @@
 .env
+/api-medecin/src/main/resources/application.properties

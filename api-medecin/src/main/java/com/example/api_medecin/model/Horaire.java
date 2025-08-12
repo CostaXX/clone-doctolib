@@ -25,4 +25,32 @@ public class Horaire {
     @Column(name = "heure_fin", nullable = false)
     private LocalTime heureFin;
 
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public String getJour() {
+        return jour;
+    }
+
+    public void setJour(String jour) {
+        this.jour = jour;
+    }
+
+    public LocalTime getHeureDebut() {
+        return heureDebut;
+    }
+
+    public void setHeureDebut(LocalTime heureDebut) {
+        this.heureDebut = heureDebut;
+    }
+
+    public LocalTime getHeureFin() {
+        return heureFin;
+    }
+
+    public void setHeureFin(LocalTime heureFin) {
+        this.heureFin = heureFin;
+    }
 }

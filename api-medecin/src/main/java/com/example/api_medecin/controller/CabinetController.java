@@ -10,8 +10,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -37,4 +40,34 @@ public class CabinetController {
         return cabinetRepository.findAll();
     }
     
+    // READ one
+    @GetMapping("/{id}")
+    public ResponseEntity<Cabinet> getCabinetById(@PathVariable Long id) {
+        return cabinetRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // UPDATE
+    @PutMapping("/{id}")
+    public ResponseEntity<Cabinet> updateCabinet(@PathVariable Long id, @RequestBody Cabinet cabinetDetails) {
+        return cabinetRepository.findById(id)
+            .map(cabinet -> {
+                cabinet.setNom(cabinetDetails.getNom());
+                cabinet.setAdresse(cabinetDetails.getAdresse());
+                // mets à jour tous les champs que tu veux ici
+                Cabinet updated = cabinetRepository.save(cabinet);
+                return ResponseEntity.ok(updated);
+            }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCabinet(@PathVariable Long id) {
+        if (!cabinetRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        cabinetRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

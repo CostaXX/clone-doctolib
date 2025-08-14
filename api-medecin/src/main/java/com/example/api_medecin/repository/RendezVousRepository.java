@@ -11,6 +11,6 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, RendezVo
     // Accès via les propriétés de la clé composite
     List<RendezVous> findByIdMedecinId(Long medecinId);
     List<RendezVous> findByIdPatientId(Long patientId);
-    List<RendezVous> findByIdCabinetId(Long cabinetId);
+
 
 }

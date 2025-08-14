@@ -12,7 +12,6 @@ public interface MedecinRepository extends JpaRepository<Medecin, Long> {
     // Ici tu peux ajouter des méthodes personnalisées si besoin
     List<Medecin> findByNom(String nom);
     List<Medecin> findByPrenom(String prenom);
-    List<Medecin> findByEmail(String email);
     List<Medecin> findBySpecialite(String specialite);
     ResponseEntity<Medecin> findByTelephone(String telephone);
     ResponseEntity<Medecin> findByRpps(String rpps);

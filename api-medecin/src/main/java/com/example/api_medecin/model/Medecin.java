@@ -30,6 +30,12 @@ public class Medecin {
     @Column(name = "rpps", unique = true, nullable = false)
     private String rpps;
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
     public String getNom() {
         return nom;
     }

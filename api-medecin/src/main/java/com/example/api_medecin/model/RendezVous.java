@@ -30,5 +30,37 @@ public class RendezVous {
     @Column(name = "date", nullable = false)
     private LocalDateTime dateHeure;
 
+    // Getters and Setters
+    public RendezVousId getId() {
+        return id;
+    }
+
+    public void setId(RendezVousId id) {
+        this.id = id;
+    }
+
+    public Medecin getMedecin() {
+        return medecin;
+    }
+
+    public void setMedecin(Medecin medecin) {
+        this.medecin = medecin;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public LocalDateTime getDateHeure() {
+        return dateHeure;
+    }
+
+    public void setDateHeure(LocalDateTime dateHeure) {
+        this.dateHeure = dateHeure;
+    }
 
 }

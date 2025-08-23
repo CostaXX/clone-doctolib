@@ -1,3 +1,6 @@
+package com.example.api_medecin.config;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -5,7 +8,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jose.jwk.OctetSequenceKey;
+
 
 @Configuration
 public class JwtConfig {
@@ -14,8 +17,8 @@ public class JwtConfig {
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        OctetSequenceKey octetKey = new OctetSequenceKey.Builder(SECRET_KEY.getBytes()).build();
-        JWKSource<SecurityContext> jwkSource = new ImmutableSecret<>(octetKey);
+        SecretKey secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), "HmacSHA256");
+        JWKSource<SecurityContext> jwkSource = new ImmutableSecret<SecurityContext>(secretKey);
         return new NimbusJwtEncoder(jwkSource);
     }
 }

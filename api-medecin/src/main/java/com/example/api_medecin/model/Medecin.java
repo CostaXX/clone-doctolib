@@ -11,9 +11,9 @@ import jakarta.persistence.Table;
 @Table(name = "medecin")
 public class Medecin extends User {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // private Long id;
 
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -29,12 +29,6 @@ public class Medecin extends User {
 
     @Column(name = "rpps", unique = true, nullable = false)
     private String rpps;
-
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
 
     public String getNom() {
         return nom;

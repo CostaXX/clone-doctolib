@@ -1,5 +1,7 @@
 package com.example.api_medecin.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
 import jakarta.persistence.*;
 
 @MappedSuperclass
@@ -9,10 +11,14 @@ public abstract class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Email obligatoire")
+    @Email(message = "Format email invalide")
     private String email;
 
     @Column(nullable = false)
+    @NotBlank(message = "Mot de passe obligatoire")
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -15,5 +15,9 @@ public class Role {
     @Column(unique = true)
     private String name; // ex: "ROLE_MEDECIN", "ROLE_UTILISATEUR", "ROLE_CABINET"
 
+    public String getName() {
+        return name;
+    }
+
     // getters / setters
 }

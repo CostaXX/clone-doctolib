@@ -13,6 +13,7 @@ public interface MedecinRepository extends JpaRepository<Medecin, Long> {
     List<Medecin> findByNom(String nom);
     List<Medecin> findByPrenom(String prenom);
     List<Medecin> findBySpecialite(String specialite);
+    Boolean existsByEmail(String email);
     ResponseEntity<Medecin> findByTelephone(String telephone);
     ResponseEntity<Medecin> findByRpps(String rpps);
 

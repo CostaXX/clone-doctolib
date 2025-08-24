@@ -1,5 +1,12 @@
 package com.example.api_medecin.repository;
 
-public class RoleRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.api_medecin.model.Role;
+
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    List<Role> findByName(String name);
     
 }

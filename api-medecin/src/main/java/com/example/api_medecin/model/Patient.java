@@ -7,19 +7,12 @@ import org.hibernate.annotations.Check;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "patient")
 @Check(constraints = "sexe IN (0,1,2)")
 public class Patient extends User {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -41,13 +34,7 @@ public class Patient extends User {
 
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNom() {
         return nom;

@@ -9,14 +9,15 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.example.api_medecin.model.AuthResponse;
 import com.example.api_medecin.model.Cabinet;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
+import com.example.api_medecin.model.Role;
 import com.example.api_medecin.model.User;
 import com.example.api_medecin.repository.CabinetRepository;
 import com.example.api_medecin.repository.MedecinRepository;
 import com.example.api_medecin.repository.PatientRepository;
+import com.example.api_medecin.repository.RoleRepository;
 
 @Service
 public class AuthService {
@@ -26,14 +27,16 @@ public class AuthService {
     private final MedecinRepository medecinRepository;
     private final PatientRepository patientRepository;
     private final CabinetRepository cabinetRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(JwtEncoder jwtEncoder, MedecinRepository medecinRepository, PatientRepository patientRepository, CabinetRepository cabinetRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(JwtEncoder jwtEncoder, MedecinRepository medecinRepository, PatientRepository patientRepository, CabinetRepository cabinetRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.medecinRepository = medecinRepository;
         this.patientRepository = patientRepository;
         this.cabinetRepository = cabinetRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtEncoder = jwtEncoder;
     }
@@ -43,52 +46,47 @@ public class AuthService {
         // Logic to authenticate user
         return "User authenticated successfully";
     }
-    // AuthenticatorResponse
-    public AuthResponse register(@RequestBody User request) {
-        // Vérifier si email déjà pris
-        if (medecinRepository.existsByEmail(request.getEmail()) ||
-            patientRepository.existsByEmail(request.getEmail()) ||
-            cabinetRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email déjà utilisé !");
-        }
 
+    // AuthenticatorResponse
+    public User register(@RequestBody User user) {
         User savedUser;
-        String token;
+        Role roleUser;
         // Créer utilisateur
-        if (request instanceof Medecin medecin) {
+        if (user instanceof Medecin medecin) {
             medecin.setPassword(passwordEncoder.encode(medecin.getPassword()));
-            medecin.setRole(request.getRole());
+            roleUser = roleRepository.findByName("MEDECIN").stream().findFirst().orElseThrow(() -> new RuntimeException("Role MEDECIN not found"));
+            medecin.setRole(roleUser);
             savedUser = medecinRepository.save(medecin);
-            token = generateToken(savedUser.getEmail(), savedUser.getRole().getName());
-        } else if (request instanceof Patient patient) {
+        } else if (user instanceof Patient patient) {
             patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-            patient.setRole(request.getRole());
+            roleUser = roleRepository.findByName("PATIENT").stream().findFirst().orElseThrow(() -> new RuntimeException("Role PATIENT not found"));
+            patient.setRole(roleUser);
             savedUser = patientRepository.save(patient);
-            token = generateToken(savedUser.getEmail(), savedUser.getRole().getName());
-        } else if (request instanceof Cabinet cabinet) {
+        } else if (user instanceof Cabinet cabinet) {
             cabinet.setPassword(passwordEncoder.encode(cabinet.getPassword()));
-            cabinet.setRole(request.getRole());
+            roleUser = roleRepository.findByName("CABINET").stream().findFirst().orElseThrow(() -> new RuntimeException("Role CABINET not found"));
+            cabinet.setRole(roleUser);
             savedUser = cabinetRepository.save(cabinet);
-            token = generateToken(savedUser.getEmail(), savedUser.getRole().getName());
         } else {
             throw new RuntimeException("Type d'utilisateur inconnu !");
         }
+        return savedUser;
 
-        // Générer token JWT
-
-    // 4️⃣ Retourner le token dans la réponse
-        return new AuthResponse(token);
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, Role role) {
         // Claims du token
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(username)                   // identifiant utilisateur
                 .issuedAt(Instant.now())             // date d'émission
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS)) // expiration
-                .claim("role", role)               // rôle ou autre info
+                .claim("role", role.getName())               // rôle ou autre info
                 .build();
+        
+            var headers = org.springframework.security.oauth2.jwt.JwsHeader.with(
+                    org.springframework.security.oauth2.jose.jws.MacAlgorithm.HS256
+            ).build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(headers, claims)).getTokenValue();
     }
 }

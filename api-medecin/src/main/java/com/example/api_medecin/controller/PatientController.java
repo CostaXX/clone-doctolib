@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api_medecin.model.Patient;
+import com.example.api_medecin.model.AuthResponse;
 import com.example.api_medecin.repository.PatientRepository;
+import com.example.api_medecin.service.AuthService;
 
 import java.util.List;
 
@@ -24,16 +26,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class PatientController {
     
     private final PatientRepository patientRepository;
+    private final AuthService authService;
+
     
-    public PatientController(PatientRepository patientRepository) {
+    public PatientController(PatientRepository patientRepository, AuthService authService) {
         this.patientRepository = patientRepository;
+        this.authService = authService;
     }
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
-        Patient saved = patientRepository.save(patient);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<AuthResponse> createPatient(@RequestBody Patient patient) {
+        Patient saved = (Patient) authService.register(patient);
+        String token = authService.generateToken(saved.getEmail(), saved.getRole());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token, saved));
     }
 
     // READ all

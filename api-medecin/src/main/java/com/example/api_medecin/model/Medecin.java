@@ -45,4 +45,28 @@ public class Medecin extends User {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
+
+    public String getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(String specialite) {
+        this.specialite = specialite;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getRpps() {
+        return rpps;
+    }
+
+    public void setRpps(String rpps) {
+        this.rpps = rpps;
+    }
 }

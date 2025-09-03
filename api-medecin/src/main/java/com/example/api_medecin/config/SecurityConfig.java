@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 public class SecurityConfig {
@@ -17,11 +18,9 @@ public class SecurityConfig {
     .csrf(csrf -> csrf.disable())
     .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.POST, "/patients").permitAll()
-        .requestMatchers("/cabinets/**").hasRole("CABINET")
-        .requestMatchers("/medecins/**").hasRole("MEDECIN")
-        .requestMatchers("/patients/**").hasRole("PATIENT")
+        .requestMatchers(HttpMethod.POST, "/cabinets").permitAll()
         .anyRequest().authenticated()
-    );
+    ).oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
 
     return http.build();
     }

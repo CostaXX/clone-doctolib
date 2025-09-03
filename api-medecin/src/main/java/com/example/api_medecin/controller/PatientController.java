@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,18 +39,20 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<AuthResponse> createPatient(@RequestBody Patient patient) {
         Patient saved = (Patient) authService.register(patient);
-        String token = authService.generateToken(saved.getEmail(), saved.getRole());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token, saved));
+        String token = authService.generateToken(saved.getId() ,saved.getEmail(), saved.getRole());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
     }
 
     // READ all
     @GetMapping
+    @PreAuthorize("hasRole('MEDECIN') or hasRole('CABINET')")
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
     
     // READ one
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('PATIENT') and #id == authentication.name")
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         return patientRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -58,6 +61,7 @@ public class PatientController {
 
     // UPDATE
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('PATIENT') and #id == authentication.name")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
         return patientRepository.findById(id)
             .map(patient -> {
@@ -75,6 +79,7 @@ public class PatientController {
     
     // DELETE
     @DeleteMapping("/{id}")
+     @PreAuthorize("hasRole('PATIENT') and #id == authentication.name")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         if (!patientRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

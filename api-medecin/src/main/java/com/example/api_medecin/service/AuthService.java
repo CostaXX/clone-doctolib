@@ -74,7 +74,7 @@ public class AuthService {
 
     }
 
-    public String generateToken(String username, Role role) {
+    public String generateToken(Long userId,String username, Role role) {
         // Claims du token
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(username)                   // identifiant utilisateur

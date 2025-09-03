@@ -19,7 +19,7 @@ public class RendezVous {
 
     @ManyToOne
     @MapsId("medecinId")
-    @JoinColumn(name = "medecin_id")
+    @JoinColumn(name = "medecin_id", nullable = false)
     private Medecin medecin;
 
     @ManyToOne

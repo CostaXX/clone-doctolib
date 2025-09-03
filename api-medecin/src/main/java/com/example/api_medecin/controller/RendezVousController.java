@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,18 +31,26 @@ public class RendezVousController {
 
     // CREATE
     @PostMapping
+    @PreAuthorize("")
     public ResponseEntity<RendezVous> createRendezVous(@RequestBody RendezVous rendezVous) {
         RendezVous saved = rendezVousRepository.save(rendezVous);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    @GetMapping("/patients/{patientId}/rendezvous")
+    public ResponseEntity<RendezVous> getRendezVousByPatientId(@PathVariable Long patientId) {
+        return rendezVousRepository.findById(new RendezVousId(null, patientId))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // READ all
     @GetMapping
+    @PreAuthorize("")
     public List<RendezVous> getAllRendezVous() {
         return rendezVousRepository.findAll();
     }
     
-    // READ one
     @GetMapping("/{medecinId}/{patientId}")
     public ResponseEntity<RendezVous> getRendezVousById(@PathVariable Long medecinId, @PathVariable Long patientId) {
         return rendezVousRepository.findById(new RendezVousId(medecinId, patientId))

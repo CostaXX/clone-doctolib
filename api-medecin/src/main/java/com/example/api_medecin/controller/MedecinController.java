@@ -8,37 +8,46 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
+
+import com.example.api_medecin.model.AuthResponse;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.repository.MedecinRepository;
+import com.example.api_medecin.service.AuthService;
 
 @RestController
 @RequestMapping("/medecins")
 public class MedecinController {
 
     private final MedecinRepository medecinRepository;
+    private final AuthService authService;
 
-    public MedecinController(MedecinRepository medecinRepository) {
+    public MedecinController(MedecinRepository medecinRepository, AuthService authService) {
         this.medecinRepository = medecinRepository;
+        this.authService = authService;
     }
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Medecin> createMedecin(@RequestBody Medecin medecin) {
-        Medecin saved = medecinRepository.save(medecin);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<AuthResponse> createMedecin(@RequestBody Medecin medecin) {
+        Medecin saved = (Medecin) authService.register(medecin);
+        String token = authService.generateToken(saved.getId() ,saved.getEmail(), saved.getRole());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
     }
 
     // READ all
     @GetMapping
+    @PreAuthorize("hasRole('PATIENT')")
     public List<Medecin> getAllMedecins() {
         return medecinRepository.findAll();
     }
 
     // READ one
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<Medecin> getMedecinById(@PathVariable Long id) {
         return medecinRepository.findById(id)
                 .map(ResponseEntity::ok)

@@ -1,0 +1,97 @@
+.navbar{
+    position: relative;
+    height: 80px;
+    padding-inline: 30px ;
+    padding-block: 10px ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // background-color: rgb(219, 219, 219);
+    box-shadow: #00000033 0px 1px 6px, #0000001a 0px 1px 4px;
+}
+
+nav{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo{
+    left: 30px;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo span{
+    // font-weight: 600;
+    font-size: 30px;
+}
+
+.iconPlanning{
+    width: 40px;
+    height: 40px;
+    background-color: #155dfc;
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconPlanning svg{
+    width: 25px;
+    height: 25px;
+    color: white;
+}
+
+ul{
+    list-style: none;
+    display: flex;
+}
+
+li{
+    
+    font-size: 14px;
+}
+
+li a{
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    margin-inline: 10px;
+}
+
+li a span{
+    margin-left: 10px;
+}
+
+.login{
+    right: 30px;
+    top: 50%;
+    padding: 10px 20px;
+    border: 1px solid #cacaca;
+    border-radius: 7px;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.login span{
+    margin-left: 10px;
+}
+
+a{
+    transition: all 0.3s ease-in-out;
+}
+
+a:hover{
+    background-color: #f5f5f5;
+    border-radius: 7px;
+}
+
+a:active{
+    background-color: #000000;
+    color: white;
+}

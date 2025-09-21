@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/rendezvous")
@@ -31,54 +33,50 @@ public class RendezVousController {
 
     // CREATE
     @PostMapping
-    @PreAuthorize("")
+    @PreAuthorize("hasRole('MEDECIN')")
     public ResponseEntity<RendezVous> createRendezVous(@RequestBody RendezVous rendezVous) {
         RendezVous saved = rendezVousRepository.save(rendezVous);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("/patients/{patientId}/rendezvous")
+    @PreAuthorize("(hasRole('PATIENT') and #id == authentication.name)")
     public ResponseEntity<RendezVous> getRendezVousByPatientId(@PathVariable Long patientId) {
         return rendezVousRepository.findById(new RendezVousId(null, patientId))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // READ all
-    @GetMapping
-    @PreAuthorize("")
-    public List<RendezVous> getAllRendezVous() {
-        return rendezVousRepository.findAll();
-    }
-    
-    @GetMapping("/{medecinId}/{patientId}")
-    public ResponseEntity<RendezVous> getRendezVousById(@PathVariable Long medecinId, @PathVariable Long patientId) {
-        return rendezVousRepository.findById(new RendezVousId(medecinId, patientId))
+    @GetMapping("/medecins/{medecinId}/rendezvous")
+    @PreAuthorize("hasRole('MEDECIN') and #id == authentication.name")
+    public ResponseEntity<RendezVous> getRendezVousByMedecinId(@PathVariable Long medecinId) {
+        return rendezVousRepository.findById(new RendezVousId(medecinId, null))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE
-    @PutMapping("/{medecinId}/{patientId}")
-    public ResponseEntity<RendezVous> updateRendezVous(@PathVariable Long medecinId, @PathVariable Long patientId, @RequestBody RendezVous rendezVousDetails) {
-        return rendezVousRepository.findById(new RendezVousId(medecinId, patientId))
-            .map(rendezVous -> {
-                rendezVous.setMedecin(rendezVousDetails.getMedecin());
-                rendezVous.setPatient(rendezVousDetails.getPatient());
-                rendezVous.setDateHeure(rendezVousDetails.getDateHeure());
-                return ResponseEntity.ok(rendezVousRepository.save(rendezVous));
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    // DELETE
-    @DeleteMapping("/{medecinId}/{patientId}")
-    public ResponseEntity<Void> deleteRendezVous(@PathVariable Long medecinId, @PathVariable Long patientId) {
-        if (rendezVousRepository.existsById(new RendezVousId(medecinId, patientId))) {
-            rendezVousRepository.deleteById(new RendezVousId(medecinId, patientId));
+    @DeleteMapping("/patients/{patientId}/rendezvous/{medecinId}")
+    @PreAuthorize("hasRole('PATIENT') and #id == authentication.name")
+    public ResponseEntity<Void> deleteRendezVous(@PathVariable Long patientId, @PathVariable Long medecinId) {
+        RendezVousId rendezVousId = new RendezVousId(medecinId, patientId);
+        if (rendezVousRepository.existsById(rendezVousId)) {
+            rendezVousRepository.deleteById(rendezVousId);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/medecins/{medecinId}/rendezvous/{patientId}")
+    @PreAuthorize("hasRole('MEDECIN') and #id == authentication.name")
+    public ResponseEntity<Void> deleteRendezVousByMedecin(@PathVariable Long medecinId, @PathVariable Long patientId) {
+        RendezVousId rendezVousId = new RendezVousId(medecinId, patientId);
+        if (rendezVousRepository.existsById(rendezVousId)) {
+            rendezVousRepository.deleteById(rendezVousId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

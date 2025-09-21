@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef  } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './header.scss'
 })
 export class Header {
-
+  @ViewChild('maDiv') maDiv!: ElementRef;
+  showOverlay(): void {
+    this.maDiv.nativeElement.classList.toggle('navActive');
+  }
 }

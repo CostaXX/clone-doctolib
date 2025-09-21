@@ -42,14 +42,12 @@ public class CabinetController {
 
     // READ all
     @GetMapping
-    @PreAuthorize("hasRole('PATIENT')")
     public List<Cabinet> getAllCabinets() {
         return cabinetRepository.findAll();
     }
     
     // READ one
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<Cabinet> getCabinetById(@PathVariable Long id) {
         return cabinetRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -58,6 +56,7 @@ public class CabinetController {
 
     // UPDATE
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CABINET') and #id == authentication.name")
     public ResponseEntity<Cabinet> updateCabinet(@PathVariable Long id, @RequestBody Cabinet cabinetDetails) {
         return cabinetRepository.findById(id)
             .map(cabinet -> {
@@ -71,6 +70,7 @@ public class CabinetController {
 
     // DELETE
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CABINET') and #id == authentication.name")
     public ResponseEntity<Void> deleteCabinet(@PathVariable Long id) {
         if (!cabinetRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

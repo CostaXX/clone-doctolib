@@ -32,6 +32,7 @@ public class MedecinController {
 
     // CREATE
     @PostMapping
+    @PreAuthorize("hasRole('CABINET')")
     public ResponseEntity<AuthResponse> createMedecin(@RequestBody Medecin medecin) {
         Medecin saved = (Medecin) authService.register(medecin);
         String token = authService.generateToken(saved.getId() ,saved.getEmail(), saved.getRole());
@@ -40,14 +41,12 @@ public class MedecinController {
 
     // READ all
     @GetMapping
-    @PreAuthorize("hasRole('PATIENT')")
     public List<Medecin> getAllMedecins() {
         return medecinRepository.findAll();
     }
 
     // READ one
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<Medecin> getMedecinById(@PathVariable Long id) {
         return medecinRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -56,6 +55,7 @@ public class MedecinController {
 
     // UPDATE
     @PutMapping("/{id}")
+    @PreAuthorize("(hasRole('MEDECIN') and #id == authentication.name) or (hasRole('CABINET') and #id == authentication.principal.cabinetId)")
     public ResponseEntity<Medecin> updateMedecin(@PathVariable Long id, @RequestBody Medecin medecinDetails) {
         return medecinRepository.findById(id)
             .map(medecin -> {
@@ -69,6 +69,7 @@ public class MedecinController {
 
     // DELETE
     @DeleteMapping("/{id}")
+    @PreAuthorize("(hasRole('MEDECIN') and #id == authentication.name) or (hasRole('CABINET') and #id == authentication.principal.cabinetId)")
     public ResponseEntity<Void> deleteMedecin(@PathVariable Long id) {
         if (!medecinRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

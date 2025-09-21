@@ -1,0 +1,20 @@
+.hero{
+ display: grid;
+  grid-template-columns: 1fr 1fr; /* deux colonnes, gauche et droite */
+  align-items: center; /* pour bien centrer verticalement si besoin */
+  gap: 2rem; /* espace entre gauche et droite */
+}
+
+
+
+@media (max-width: 768px) {
+ .hero{
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+ }
+
+ .photoHero {
+  grid-column: 1; /* force l’élément dans la 2ème colonne */
+}
+}

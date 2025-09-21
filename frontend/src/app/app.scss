@@ -2,3 +2,9 @@ app-header{
     position: fixed;
     width: 100%;
 }
+
+router-outlet{
+    padding-top: 80px; /* hauteur de l’en-tête */
+    display: block;
+    // min-height: calc(100vh - 60px); /* pour s’assurer que le contenu prend au moins toute la hauteur visible */
+}

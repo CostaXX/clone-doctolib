@@ -52,7 +52,7 @@ public class PatientController {
     
     // READ one
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT') and #id == authentication.name")
+    @PreAuthorize("(hasRole('PATIENT') and #id == authentication.name) or hasRole('MEDECIN') or hasRole('CABINET')")
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         return patientRepository.findById(id)
                 .map(ResponseEntity::ok)

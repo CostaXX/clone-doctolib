@@ -9,12 +9,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.example.api_medecin.model.Cabinet;
+
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.Role;
 import com.example.api_medecin.model.User;
-import com.example.api_medecin.repository.CabinetRepository;
+
 import com.example.api_medecin.repository.MedecinRepository;
 import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.RoleRepository;
@@ -26,16 +26,16 @@ public class AuthService {
 
     private final MedecinRepository medecinRepository;
     private final PatientRepository patientRepository;
-    private final CabinetRepository cabinetRepository;
+
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(JwtEncoder jwtEncoder, MedecinRepository medecinRepository, PatientRepository patientRepository, CabinetRepository cabinetRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(JwtEncoder jwtEncoder, MedecinRepository medecinRepository, PatientRepository patientRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.medecinRepository = medecinRepository;
         this.patientRepository = patientRepository;
-        this.cabinetRepository = cabinetRepository;
+
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtEncoder = jwtEncoder;
@@ -62,11 +62,6 @@ public class AuthService {
             roleUser = roleRepository.findByName("PATIENT").stream().findFirst().orElseThrow(() -> new RuntimeException("Role PATIENT not found"));
             patient.setRole(roleUser);
             savedUser = patientRepository.save(patient);
-        } else if (user instanceof Cabinet cabinet) {
-            cabinet.setPassword(passwordEncoder.encode(cabinet.getPassword()));
-            roleUser = roleRepository.findByName("CABINET").stream().findFirst().orElseThrow(() -> new RuntimeException("Role CABINET not found"));
-            cabinet.setRole(roleUser);
-            savedUser = cabinetRepository.save(cabinet);
         } else {
             throw new RuntimeException("Type d'utilisateur inconnu !");
         }

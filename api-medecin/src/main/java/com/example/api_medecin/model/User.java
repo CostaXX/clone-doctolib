@@ -2,6 +2,10 @@ package com.example.api_medecin.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @MappedSuperclass
@@ -25,6 +29,9 @@ public abstract class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "RendezVous", cascade = CascadeType.ALL,  orphanRemoval = true)
+    List<RendezVous> rendezVous;
+
     // Constructeurs
     public User() {}
 
@@ -32,6 +39,7 @@ public abstract class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.rendezVous = new ArrayList<>();
     }
 
     // Getters et Setters

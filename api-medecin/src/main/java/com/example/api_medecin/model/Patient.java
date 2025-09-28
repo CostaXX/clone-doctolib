@@ -1,18 +1,29 @@
 package com.example.api_medecin.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.Check;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "patient")
 @Check(constraints = "sexe IN (0,1,2)")
 public class Patient extends User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -28,6 +39,10 @@ public class Patient extends User {
 
     @Column(name = "telephone", unique = true, nullable = false, length = 10)
     private String telephone;
+
+    
+
+
 
 
 

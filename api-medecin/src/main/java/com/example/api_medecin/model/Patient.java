@@ -1,7 +1,6 @@
 package com.example.api_medecin.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Check;
@@ -22,14 +21,7 @@ public class Patient extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "nom", nullable = false)
-    private String nom;
-
-    @Column(name = "prenom", nullable = false)
-    private String prenom;
+    private Long patient_id;
 
     @Column(name = "date_naissance", nullable = false)
     private LocalDate dateNaissance;
@@ -37,35 +29,10 @@ public class Patient extends User {
     @Column(name = "sexe", nullable = false)
     private Integer sexe;
 
-    @Column(name = "telephone", unique = true, nullable = false, length = 10)
-    private String telephone;
-
-    
-
-
-
-
-
-
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<RendezVous> rendezVous;
 
     // Getters and Setters
-
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
 
     public LocalDate getDateNaissance() {
         return dateNaissance;
@@ -82,15 +49,5 @@ public class Patient extends User {
     public void setSexe(Integer sexe) {
         this.sexe = sexe;
     }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-
     
 }

@@ -11,10 +11,16 @@ import jakarta.persistence.*;
 @MappedSuperclass
 public abstract class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+
+    @Column(name = "nom", nullable = false)
+    private String nom;
+
+    @Column(name = "prenom", nullable = false)
+    private String prenom;
+
+    @Column(name = "telephone", unique = true, nullable = false, length = 10)
+    private String telephone;
 
     @Column(unique = true, nullable = false)
     @NotBlank(message = "Email obligatoire")
@@ -29,8 +35,7 @@ public abstract class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "RendezVous", cascade = CascadeType.ALL,  orphanRemoval = true)
-    List<RendezVous> rendezVous;
+
 
     // Constructeurs
     public User() {}
@@ -39,12 +44,9 @@ public abstract class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.rendezVous = new ArrayList<>();
     }
 
     // Getters et Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

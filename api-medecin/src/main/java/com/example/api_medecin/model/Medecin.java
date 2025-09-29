@@ -1,47 +1,33 @@
 package com.example.api_medecin.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "medecin")
 public class Medecin extends User {
     
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long medecin_id;
 
-    @Column(name = "nom", nullable = false)
-    private String nom;
 
-    @Column(name = "prenom", nullable = false)
-    private String prenom;
+    @OneToMany(mappedBy = "medecin", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<RendezVous> rendezVous;
 
     @Column(name = "specialite", nullable = false)
     private String specialite;
 
-    @Column(name = "telephone", unique = true, nullable = false, length = 10)
-    private String telephone;
-
     @Column(name = "rpps", unique = true, nullable = false)
     private String rpps;
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
 
     public String getSpecialite() {
         return specialite;
@@ -51,14 +37,6 @@ public class Medecin extends User {
         this.specialite = specialite;
     }
 
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
     public String getRpps() {
         return rpps;
     }
@@ -66,4 +44,6 @@ public class Medecin extends User {
     public void setRpps(String rpps) {
         this.rpps = rpps;
     }
+    
+
 }

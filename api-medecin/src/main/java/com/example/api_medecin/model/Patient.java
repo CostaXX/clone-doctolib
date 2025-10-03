@@ -34,6 +34,10 @@ public class Patient extends User {
 
     // Getters and Setters
 
+    public Long getPatient_id() {
+        return patient_id;
+    }
+
     public LocalDate getDateNaissance() {
         return dateNaissance;
     }

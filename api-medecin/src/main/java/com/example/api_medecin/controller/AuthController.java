@@ -4,13 +4,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.api_medecin.dto.LoginRequest;
-import com.example.api_medecin.dto.MessageResponse;
-import com.example.api_medecin.dto.RefreshTokenRequest;
-import com.example.api_medecin.dto.RegisterRequest;
-import com.example.api_medecin.dto.TokenResponse;
-import com.example.api_medecin.model.AuthResponse;
+import com.example.api_medecin.dto.request.LoginRequest;
+import com.example.api_medecin.dto.request.RefreshTokenRequest;
+import com.example.api_medecin.dto.request.RegisterRequest;
+import com.example.api_medecin.dto.response.MessageResponse;
+import com.example.api_medecin.dto.response.TokenResponse;
+import com.example.api_medecin.dto.response.AuthResponse;
 import com.example.api_medecin.model.User;
+import com.example.api_medecin.repository.PatientRepository;
+import com.example.api_medecin.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -25,10 +27,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/authentication")
 public class AuthController {
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
     @PostMapping("login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         
-        return entity;
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("register")

@@ -29,6 +29,10 @@ public class Medecin extends User {
     @Column(name = "rpps", unique = true, nullable = false)
     private String rpps;
 
+    public Long getMedecin_id() {
+        return medecin_id;
+    }
+
     public String getSpecialite() {
         return specialite;
     }

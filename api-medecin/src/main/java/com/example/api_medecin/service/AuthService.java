@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.api_medecin.dto.request.LoginRequest;
+import com.example.api_medecin.dto.request.RegisterRequest;
 import com.example.api_medecin.dto.response.AuthResponse;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
@@ -29,13 +30,15 @@ public class AuthService {
     // voir sil'on peut fusionner les trois repositories en un seul
     // ou si on peut utiliser un UserDetailsService pour gérer les utilisateurs
     private final PatientRepository patientRepository;
+    private final MedecinRepository medecinRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(PatientRepository patientRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, JwtEncoder jwtEncoder) {
+    public AuthService(PatientRepository patientRepository,MedecinRepository medecinRepository ,RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, JwtEncoder jwtEncoder) {
         this.patientRepository = patientRepository;
+        this.medecinRepository = medecinRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -75,7 +78,7 @@ public class AuthService {
     }
 
     // AuthenticatorResponse
-    public User register(@RequestBody User user) {
+    public AuthResponse register(@RequestBody RegisterRequest user) {
         User savedUser;
         Role roleUser;
         // Créer utilisateur

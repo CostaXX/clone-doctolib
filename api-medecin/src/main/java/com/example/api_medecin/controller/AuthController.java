@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api_medecin.dto.request.LoginRequest;
 import com.example.api_medecin.dto.request.RefreshTokenRequest;
-import com.example.api_medecin.dto.request.RegisterRequest;
+import com.example.api_medecin.dto.request.PatientRegisterRequest;
 import com.example.api_medecin.dto.response.MessageResponse;
 import com.example.api_medecin.dto.response.TokenResponse;
 import com.example.api_medecin.dto.response.AuthResponse;
@@ -39,10 +39,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    @PostMapping("register/patient")
+    public ResponseEntity<AuthResponse> register(@RequestBody PatientRegisterRequest request) {
         return entity;
     }
+
+    @PostMapping("register/medecin")
+    public String postMethodName(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
 
     @PostMapping("logout")
     public ResponseEntity<MessageResponse> logout(HttpServletRequest request) {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.api_medecin.dto.request.LoginRequest;
-import com.example.api_medecin.dto.request.RegisterRequest;
+import com.example.api_medecin.dto.request.PatientRegisterRequest;
 import com.example.api_medecin.dto.response.AuthResponse;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
@@ -78,24 +78,32 @@ public class AuthService {
     }
 
     // AuthenticatorResponse
-    public AuthResponse register(@RequestBody RegisterRequest user) {
-        User savedUser;
-        Role roleUser;
-        // Créer utilisateur
-        if (user instanceof Medecin medecin) {
-            medecin.setPassword(passwordEncoder.encode(medecin.getPassword()));
-            roleUser = roleRepository.findByName("MEDECIN").stream().findFirst().orElseThrow(() -> new RuntimeException("Role MEDECIN not found"));
-            medecin.setRole(roleUser);
-            savedUser = medecinRepository.save(medecin);
-        } else if (user instanceof Patient patient) {
-            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-            roleUser = roleRepository.findByName("PATIENT").stream().findFirst().orElseThrow(() -> new RuntimeException("Role PATIENT not found"));
-            patient.setRole(roleUser);
-            savedUser = patientRepository.save(patient);
-        } else {
-            throw new RuntimeException("Type d'utilisateur inconnu !");
+    public AuthResponse registerPatient(@RequestBody PatientRegisterRequest user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already in use");
         }
-        return savedUser;
+
+        Patient patient = new Patient();
+        patient.setNom(user.getNom());
+        patient.setPrenom(user.getPrenom());
+        patient.setEmail(user.getEmail());
+        patient.setTelephone(user.getTelephone());
+        patient.setDateNaissance(user.getDateDeNaissance());
+        patient.setSexe(user.getSexe());
+        patient.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role role = roleRepository.findByName("PATIENT");
+        if (role == null) {
+            throw new RuntimeException("Role not found");
+        }
+        patient.setRole(role);
+
+        patientRepository.save(patient);
+
+        String token = generateToken(patient.getPatient_id(), patient.getEmail(), role);
+        String refreshToken = generateRefreshToken(patient.getPatient_id());
+
+        return new AuthResponse(token, refreshToken, patient.getEmail(), role.getName());
 
     }
 

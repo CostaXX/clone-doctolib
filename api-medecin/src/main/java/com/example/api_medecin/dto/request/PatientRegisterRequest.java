@@ -37,4 +37,68 @@ public class PatientRegisterRequest {
     @NotBlank(message = "Le sexe est obligatoire")
     private Integer sexe;
 
+    // Getters and Setters
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public LocalDate getDateDeNaissance() {
+        return dateDeNaissance;
+    }
+
+    public void setDateDeNaissance(LocalDate dateDeNaissance) {
+        this.dateDeNaissance = dateDeNaissance;
+    }
+
+    public Integer getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(Integer sexe) {
+        this.sexe = sexe;
+    }
+
 }

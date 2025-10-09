@@ -15,6 +15,7 @@ import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,14 +35,18 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         
+        AuthResponse response = authService.login(request);
+
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute("token", response.getToken());
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("register/patient")
     public ResponseEntity<AuthResponse> register(@RequestBody PatientRegisterRequest request) {
-        return entity;
+        return ResponseEntity.ok(authService.registerPatient(request));
     }
 
     @PostMapping("register/medecin")

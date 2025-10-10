@@ -25,7 +25,10 @@ import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.RoleRepository;
 import com.example.api_medecin.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     // voir sil'on peut fusionner les trois repositories en un seul
     // ou si on peut utiliser un UserDetailsService pour gérer les utilisateurs
@@ -36,15 +39,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(PatientRepository patientRepository,MedecinRepository medecinRepository ,RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, JwtEncoder jwtEncoder) {
-        this.patientRepository = patientRepository;
-        this.medecinRepository = medecinRepository;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtEncoder = jwtEncoder;
-    }
-    
     // Example method for user login
     public AuthResponse login(LoginRequest request) {
         // Logic to authenticate user
@@ -135,4 +129,6 @@ public class AuthService {
 
         return jwtEncoder.encode(JwtEncoderParameters.from(headers, claims)).getTokenValue();
     }
+
+    
 }

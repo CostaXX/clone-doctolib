@@ -12,12 +12,18 @@ import com.example.api_medecin.dto.response.TokenResponse;
 import com.example.api_medecin.dto.response.AuthResponse;
 import com.example.api_medecin.model.User;
 import com.example.api_medecin.repository.PatientRepository;
+import com.example.api_medecin.repository.UserRepository;
 import com.example.api_medecin.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,27 +32,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/authentication")
+@RequestMapping("/api/v1/")
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest user) {
         
-        AuthResponse response = authService.login(request);
-
-        HttpSession session = httpRequest.getSession(true);
-        session.setAttribute("token", response.getToken());
-        return ResponseEntity.ok(authService.login(request));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+            AuthResponse authResponse = authService.login(user);
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
     }
 
     @PostMapping("register/patient")
-    public ResponseEntity<AuthResponse> register(@RequestBody PatientRegisterRequest request) {
-        return ResponseEntity.ok(authService.registerPatient(request));
+    public ResponseEntity<?> register(@RequestBody User user) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return ResponseEntity.ok(userRepository.save(user));
     }
 
     @PostMapping("register/medecin")
@@ -64,7 +76,20 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return new String();
+        if (refreshTokenService.isValid(refreshToken)) {
+        String email = refreshTokenService.getEmail(refreshToken);
+        String newAccessToken = jwtService.generateAccessToken(email);
+
+        // Optionnel : rotation du refresh token
+        String newRefreshToken = refreshTokenService.rotate(refreshToken);
+
+        return ResponseEntity.ok(Map.of(
+            "accessToken", newAccessToken,
+            "refreshToken", newRefreshToken
+        ));
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+    }
     }
     
     @GetMapping("users/me")

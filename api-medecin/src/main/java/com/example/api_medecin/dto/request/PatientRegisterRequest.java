@@ -27,10 +27,6 @@ public class PatientRegisterRequest {
     @NotBlank(message = "Le mot de passe est obligatoire")
     private String password;
 
-
-    @NotBlank(message = "L'adresse est obligatoire")
-    private String adresse;
-
     @NotBlank(message = "La date de naissance est obligatoire")
     private LocalDate dateDeNaissance;
 
@@ -77,13 +73,13 @@ public class PatientRegisterRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getAdresse() {
-        return adresse;
-    }
+    // public String getAdresse() {
+    //     return adresse;
+    // }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
+    // public void setAdresse(String adresse) {
+    //     this.adresse = adresse;
+    // }
 
     public LocalDate getDateDeNaissance() {
         return dateDeNaissance;

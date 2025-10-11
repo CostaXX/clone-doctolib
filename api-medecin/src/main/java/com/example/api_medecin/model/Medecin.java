@@ -12,13 +12,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "medecin")
+// @Table(name = "medecin")
 public class Medecin extends User {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long medecin_id;
-
 
     @OneToMany(mappedBy = "medecin", cascade = CascadeType.ALL,  orphanRemoval = true)
     private List<RendezVous> rendezVous;
@@ -29,9 +24,7 @@ public class Medecin extends User {
     @Column(name = "rpps", unique = true, nullable = false)
     private String rpps;
 
-    public Long getMedecin_id() {
-        return medecin_id;
-    }
+    // Getters and Setters
 
     public String getSpecialite() {
         return specialite;

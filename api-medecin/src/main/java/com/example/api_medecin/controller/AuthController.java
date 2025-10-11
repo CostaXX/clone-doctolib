@@ -10,6 +10,7 @@ import com.example.api_medecin.dto.request.PatientRegisterRequest;
 import com.example.api_medecin.dto.response.MessageResponse;
 import com.example.api_medecin.dto.response.TokenResponse;
 import com.example.api_medecin.dto.response.AuthResponse;
+import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.User;
 import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.UserRepository;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,13 +55,19 @@ public class AuthController {
     }
 
     @PostMapping("register/patient")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<?> register(@RequestBody PatientRegisterRequest user) {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             return ResponseEntity.badRequest().body("Error: Email is already in use!");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return ResponseEntity.ok(userRepository.save(user));
+        AuthResponse authResponse = authService.registerPatient(user);
+        return ResponseEntity.ok(authResponse);
     }
+
+    @GetMapping("/helloWorld")
+    public String getMethodName() {
+        return "Hello world";
+    }
+    
 
     @PostMapping("register/medecin")
     public String postMethodName(@RequestBody String entity) {
@@ -69,33 +77,33 @@ public class AuthController {
     }
     
 
-    @PostMapping("logout")
-    public ResponseEntity<MessageResponse> logout(HttpServletRequest request) {
-        return new String();
-    }
+    // @PostMapping("logout")
+    // public ResponseEntity<MessageResponse> logout(HttpServletRequest request) {
+    //     return new String();
+    // }
 
-    @PostMapping("refresh-token")
-    public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        if (refreshTokenService.isValid(refreshToken)) {
-        String email = refreshTokenService.getEmail(refreshToken);
-        String newAccessToken = jwtService.generateAccessToken(email);
+    // @PostMapping("refresh-token")
+    // public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+    //     if (refreshTokenService.isValid(refreshToken)) {
+    //     String email = refreshTokenService.getEmail(refreshToken);
+    //     String newAccessToken = jwtService.generateAccessToken(email);
 
-        // Optionnel : rotation du refresh token
-        String newRefreshToken = refreshTokenService.rotate(refreshToken);
+    //     // Optionnel : rotation du refresh token
+    //     String newRefreshToken = refreshTokenService.rotate(refreshToken);
 
-        return ResponseEntity.ok(Map.of(
-            "accessToken", newAccessToken,
-            "refreshToken", newRefreshToken
-        ));
-    } else {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-    }
-    }
+    //     return ResponseEntity.ok(Map.of(
+    //         "accessToken", newAccessToken,
+    //         "refreshToken", newRefreshToken
+    //     ));
+    // } else {
+    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+    // }
+    // }
     
-    @GetMapping("users/me")
-    public ResponseEntity<User> getProfile(@RequestParam AuthResponse request) {
-        return new String();
-    }
+    // @GetMapping("users/me")
+    // public ResponseEntity<User> getProfile(@RequestParam AuthResponse request) {
+    //     return new String();
+    // }
     
     
 }

@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api_medecin.model.Patient;
-import com.example.api_medecin.model.AuthResponse;
 import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.service.AuthService;
 

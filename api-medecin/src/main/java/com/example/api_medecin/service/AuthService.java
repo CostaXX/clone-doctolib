@@ -55,12 +55,12 @@ public class AuthService {
         if (user instanceof Medecin) {
             Medecin medecin = (Medecin) user;
             // Additional logic for Medecin if needed
-            token = generateToken(medecin.getMedecin_id(), user.getEmail(), user.getRole());
-            refreshToken = generateRefreshToken(medecin.getMedecin_id());
+            token = generateToken(medecin.getId(), user.getEmail(), user.getRole());
+            refreshToken = generateRefreshToken(medecin.getId());
         } else if (user instanceof Patient) {
             Patient patient = (Patient) user;
-            token = generateToken(patient.getPatient_id(), user.getEmail(), user.getRole());
-            refreshToken = generateRefreshToken(patient.getPatient_id());
+            token = generateToken(patient.getId(), user.getEmail(), user.getRole());
+            refreshToken = generateRefreshToken(patient.getId());
             // Additional logic for Patient if needed
             
         } else {
@@ -94,8 +94,8 @@ public class AuthService {
 
         patientRepository.save(patient);
 
-        String token = generateToken(patient.getPatient_id(), patient.getEmail(), role);
-        String refreshToken = generateRefreshToken(patient.getPatient_id());
+        String token = generateToken(patient.getId(), patient.getEmail(), role);
+        String refreshToken = generateRefreshToken(patient.getId());
 
         return new AuthResponse(token, refreshToken, patient.getEmail(), role.getName());
 

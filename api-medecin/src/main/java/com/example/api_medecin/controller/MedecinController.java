@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
-import com.example.api_medecin.model.AuthResponse;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.repository.MedecinRepository;
 import com.example.api_medecin.service.AuthService;

@@ -17,13 +17,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "patient")
+// @Table(name = "patient")
 @Check(constraints = "sexe IN (0,1,2)")
 public class Patient extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long patient_id;
+
 
     @Column(name = "date_naissance", nullable = false)
     private LocalDate dateNaissance;
@@ -35,10 +33,6 @@ public class Patient extends User {
     private List<RendezVous> rendezVous;
 
     // Getters and Setters
-
-    public Long getPatient_id() {
-        return patient_id;
-    }
 
     public LocalDate getDateNaissance() {
         return dateNaissance;

@@ -17,12 +17,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if(roleRepository.findByName("PATIENT").isEmpty()) {
+        if(roleRepository.findByName("PATIENT") == null) {
             Role rolePatient = new Role();
             rolePatient.setName("PATIENT");
             roleRepository.save(rolePatient);
         }
-        if(roleRepository.findByName("MEDECIN").isEmpty()) {
+        if(roleRepository.findByName("MEDECIN") == null) {
             Role roleMedecin = new Role();
             roleMedecin.setName("MEDECIN");
             roleRepository.save(roleMedecin);

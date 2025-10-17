@@ -15,6 +15,7 @@ import com.example.api_medecin.model.User;
 import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.UserRepository;
 import com.example.api_medecin.service.AuthService;
+import com.example.api_medecin.service.RefreshTokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -63,7 +65,7 @@ public class AuthController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @GetMapping("/helloWorld")
+    @GetMapping("helloWorld")
     public String getMethodName() {
         return "Hello world";
     }
@@ -82,23 +84,11 @@ public class AuthController {
     //     return new String();
     // }
 
-    // @PostMapping("refresh-token")
-    // public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-    //     if (refreshTokenService.isValid(refreshToken)) {
-    //     String email = refreshTokenService.getEmail(refreshToken);
-    //     String newAccessToken = jwtService.generateAccessToken(email);
-
-    //     // Optionnel : rotation du refresh token
-    //     String newRefreshToken = refreshTokenService.rotate(refreshToken);
-
-    //     return ResponseEntity.ok(Map.of(
-    //         "accessToken", newAccessToken,
-    //         "refreshToken", newRefreshToken
-    //     ));
-    // } else {
-    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-    // }
-    // }
+    @PostMapping("refresh-token")
+    public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        TokenResponse tokenResponse = refreshTokenService.refreshToken(request);
+        return ResponseEntity.ok(tokenResponse);
+    }
     
     // @GetMapping("users/me")
     // public ResponseEntity<User> getProfile(@RequestParam AuthResponse request) {

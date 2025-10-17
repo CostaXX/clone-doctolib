@@ -3,6 +3,8 @@ package com.example.api_medecin.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -29,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements UserDetailsService{
     // voir sil'on peut fusionner les trois repositories en un seul
     // ou si on peut utiliser un UserDetailsService pour gérer les utilisateurs
     private final PatientRepository patientRepository;
@@ -99,6 +101,12 @@ public class AuthService {
 
         return new AuthResponse(token, refreshToken, patient.getEmail(), role.getName());
 
+    }
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.userRepository
+                .findByEmail(username);
     }
 
     public String generateToken(Long userId,String username, Role role) {

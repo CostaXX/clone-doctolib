@@ -46,10 +46,12 @@ public abstract class User implements UserDetails{
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    private boolean actif = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+this.role.getName()));
-        // ⚠️ suppose que ta classe Role a un champ "nom"
+        
     }
 
     @Override
@@ -68,22 +70,22 @@ public abstract class User implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.actif;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.actif;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.actif;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.actif;
     }
 
 
@@ -115,4 +117,8 @@ public abstract class User implements UserDetails{
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public void setActif(boolean actif) {
+        this.actif = actif;
+    }
 }

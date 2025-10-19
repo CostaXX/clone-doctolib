@@ -2,6 +2,7 @@ package com.example.api_medecin.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.Role;
 import com.example.api_medecin.model.User;
-
+import com.example.api_medecin.model.Validation;
 import com.example.api_medecin.repository.MedecinRepository;
 import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.RoleRepository;
@@ -40,6 +41,7 @@ public class AuthService implements UserDetailsService{
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
+    private ValidationService validationService;
 
     // Example method for user login
     public AuthResponse login(LoginRequest request) {
@@ -107,6 +109,16 @@ public class AuthService implements UserDetailsService{
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository
                 .findByEmail(username);
+    }
+
+    public void activation(Map<String, String> activation) {
+        Validation validation = this.validationService.lireEnFonctionDuCode(activation.get("code"));
+        if(Instant.now().isAfter(validation.getExpiration())){
+            throw  new RuntimeException("Votre code a expiré");
+        }
+        User utilisateurActiver = this.userRepository.findById(validation.getUtilisateur().getId()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));
+        utilisateurActiver.setActif(true);
+        this.userRepository.save(utilisateurActiver);
     }
 
     public String generateToken(Long userId,String username, Role role) {

@@ -13,19 +13,39 @@ import io.jsonwebtoken.security.Keys;
 
 import org.springframework.stereotype.Service;
 
+import com.example.api_medecin.model.Jwt;
 import com.example.api_medecin.model.User;
+import com.example.api_medecin.repository.JwtRepository;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
 public class JwtService {
+    public static final String BEARER = "Bearer ";
     private final String ENCRIPTION_KEY = "608f36e92dc66d97d5933f0e6371493cb4fc05b1aa8f8de64014732472303a7c";
     private AuthService utilisateurService;
+    private JwtRepository jwtRepository;
+
+    public Jwt tokenByValue(String value) {
+        return this.jwtRepository.findByValueAndDesactiveAndExpire(
+                value,
+                false,
+                false
+        ).orElseThrow(() -> new RuntimeException("Token invalide ou inconnu"));
+    }
     
     public Map<String, String> generate(String username) {
         User utilisateur = this.utilisateurService.loadUserByUsername(username);
-        return this.generateJwt(utilisateur);
+        final Map<String, String> jwtMap = this.generateJwt(utilisateur);
+        final Jwt jwt = Jwt.builder()
+                .value(jwtMap.get(BEARER))
+                .desactive(false)
+                .expire(false)
+                .utilisateur(utilisateur)
+                .build();
+        jwtRepository.save(jwt);
+        return jwtMap;
     }
 
     public String extractUsername(String token) {
@@ -71,7 +91,7 @@ public class JwtService {
                 .setClaims(claims)
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
-        return Map.of("bearer", bearer);
+        return Map.of(BEARER, bearer);
     }
 
     private Key getKey() {

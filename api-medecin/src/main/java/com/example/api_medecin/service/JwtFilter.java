@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.api_medecin.model.Jwt;
+
 @Service
 public class JwtFilter  extends OncePerRequestFilter {
 
@@ -27,6 +29,7 @@ public class JwtFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = null;
+        Jwt tokenDansLaBDD = null;
         String username = null;
         boolean isTokenExpired = true;
 
@@ -34,11 +37,16 @@ public class JwtFilter  extends OncePerRequestFilter {
         final String authorization = request.getHeader("Authorization");
         if(authorization != null && authorization.startsWith("Bearer ")){
             token = authorization.substring(7);
+            tokenDansLaBDD = this.jwtService.tokenByValue(token);
             isTokenExpired = jwtService.isTokenExpired(token);
             username = jwtService.extractUsername(token);
         }
 
-        if(!isTokenExpired && username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if(
+            !isTokenExpired 
+                && SecurityContextHolder.getContext().getAuthentication() == null
+                && tokenDansLaBDD.getUtilisateur().getUsername().equals(username)
+        ) {
             UserDetails userDetails = utilisateurService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

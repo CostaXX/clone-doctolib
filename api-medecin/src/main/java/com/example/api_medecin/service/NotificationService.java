@@ -17,20 +17,24 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class NotificationService {
     JavaMailSender javaMailSender;
-    public void envoyer(Validation validation) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("no-reply@chillo.tech");
-        helper.setTo(validation.getUtilisateur().getEmail());
-        helper.setSubject("Votre code d'activation");
+    public void envoyer(Validation validation) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("no-reply@chillo.tech");
+            helper.setTo(validation.getUtilisateur().getEmail());
+            helper.setSubject("Votre code d'activation");
 
-        String texte = String.format(
-                "Bonjour %s, <br /> Votre code d'action est %s; A bientôt",
-                validation.getUtilisateur().getNom(),
-                validation.getCode()
-                );
-        helper.setText(texte, true);
+            String texte = String.format(
+                    "Bonjour %s, <br /> Votre code d'action est %s; A bientôt",
+                    validation.getUtilisateur().getNom(),
+                    validation.getCode()
+                    );
+            helper.setText(texte, true);
 
         javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Erreur lors de l'envoi du mail de validation", e);
+        }
     }
 }

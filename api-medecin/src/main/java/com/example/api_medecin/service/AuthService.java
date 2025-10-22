@@ -3,6 +3,7 @@ package com.example.api_medecin.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +29,7 @@ import com.example.api_medecin.repository.PatientRepository;
 import com.example.api_medecin.repository.RoleRepository;
 import com.example.api_medecin.repository.UserRepository;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,80 +37,48 @@ import lombok.RequiredArgsConstructor;
 public class AuthService implements UserDetailsService{
     // voir sil'on peut fusionner les trois repositories en un seul
     // ou si on peut utiliser un UserDetailsService pour gérer les utilisateurs
-    private final PatientRepository patientRepository;
-    private final MedecinRepository medecinRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final PatientRepository patientRepository;
+    private final MedecinRepository medecinRepository;
     private final JwtEncoder jwtEncoder;
     private ValidationService validationService;
 
-    // Example method for user login
-    public AuthResponse login(LoginRequest request) {
-        // Logic to authenticate user
-        User user = userRepository.findByEmail(request.getEmail());
-        if (user == null) {
-            throw new RuntimeException("Invalid email or password");
+    public void inscription(User utilisateur){
+
+        if(!utilisateur.getEmail().contains("@")) {
+            throw  new RuntimeException("Votre mail invalide");
         }
-        boolean passwordCorrect = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!passwordCorrect) {
-            throw new RuntimeException("Invalid email or password");
-        }
-        String token;
-        String refreshToken;
-        if (user instanceof Medecin) {
-            Medecin medecin = (Medecin) user;
-            // Additional logic for Medecin if needed
-            token = generateToken(medecin.getId(), user.getEmail(), user.getRole());
-            refreshToken = generateRefreshToken(medecin.getId());
-        } else if (user instanceof Patient) {
-            Patient patient = (Patient) user;
-            token = generateToken(patient.getId(), user.getEmail(), user.getRole());
-            refreshToken = generateRefreshToken(patient.getId());
-            // Additional logic for Patient if needed
-            
-        } else {
-            throw new RuntimeException("Unknown user type");
+        if(!utilisateur.getEmail().contains(".")) {
+            throw  new RuntimeException("Votre mail invalide");
         }
 
-        return new AuthResponse(token, refreshToken ,user.getEmail(), user.getRole().getName());
-
-    }
-
-    // AuthenticatorResponse
-    public AuthResponse registerPatient(@RequestBody PatientRegisterRequest user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already in use");
+        Optional<User> utilisateurOptional = this.userRepository.findByEmail(utilisateur.getEmail());
+        if(utilisateurOptional.isPresent()) {
+            throw  new RuntimeException("Votre mail est déjà utilisé");
         }
+        String mdpCrypte = this.passwordEncoder.encode(utilisateur.getPassword());
+        utilisateur.setPassword(mdpCrypte);
 
-        Patient patient = new Patient();
-        patient.setNom(user.getNom());
-        patient.setPrenom(user.getPrenom());
-        patient.setEmail(user.getEmail());
-        patient.setTelephone(user.getTelephone());
-        patient.setDateNaissance(user.getDateDeNaissance());
-        patient.setSexe(user.getSexe());
-        patient.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        Role role = roleRepository.findByName("PATIENT");
-        if (role == null) {
-            throw new RuntimeException("Role not found");
+        Role roleUtilisateur = new Role();
+        if (utilisateur instanceof Patient) {
+            roleUtilisateur.setName(TypeDeRole.PATIENT);
+            utilisateur.setRole(roleUtilisateur);
+            utilisateur = this.patientRepository.save((Patient) utilisateur);
+        }else if (utilisateur instanceof Medecin) {
+            roleUtilisateur.setName(TypeDeRole.MEDECIN);
+            utilisateur.setRole(roleUtilisateur);
+            utilisateur = this.medecinRepository.save((Medecin) utilisateur);
         }
-        patient.setRole(role);
-
-        patientRepository.save(patient);
-
-        String token = generateToken(patient.getId(), patient.getEmail(), role);
-        String refreshToken = generateRefreshToken(patient.getId());
-
-        return new AuthResponse(token, refreshToken, patient.getEmail(), role.getName());
+        this.validationService.enregistrer(utilisateur);
 
     }
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository
-                .findByEmail(username);
+                .findByEmail(username)
+                .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
     }
 
     public void activation(Map<String, String> activation) {

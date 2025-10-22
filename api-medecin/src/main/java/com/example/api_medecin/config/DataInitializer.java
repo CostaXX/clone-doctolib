@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.api_medecin.model.Role;
 import com.example.api_medecin.repository.RoleRepository;
+import com.example.api_medecin.service.TypeDeRole;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -17,14 +18,14 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if(roleRepository.findByName("PATIENT") == null) {
+        if(roleRepository.findByName(TypeDeRole.PATIENT).isEmpty()) {
             Role rolePatient = new Role();
-            rolePatient.setName("PATIENT");
+            rolePatient.setName(TypeDeRole.PATIENT);
             roleRepository.save(rolePatient);
         }
-        if(roleRepository.findByName("MEDECIN") == null) {
+        if(roleRepository.findByName(TypeDeRole.MEDECIN).isEmpty()) {
             Role roleMedecin = new Role();
-            roleMedecin.setName("MEDECIN");
+            roleMedecin.setName(TypeDeRole.MEDECIN);
             roleRepository.save(roleMedecin);
         }
     }

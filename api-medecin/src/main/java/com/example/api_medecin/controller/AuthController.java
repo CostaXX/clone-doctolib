@@ -8,6 +8,7 @@ import com.example.api_medecin.dto.request.AuthentificationDTO;
 import com.example.api_medecin.dto.request.PatientRegisterRequest;
 
 import com.example.api_medecin.dto.response.AuthResponse;
+import com.example.api_medecin.model.User;
 import com.example.api_medecin.repository.UserRepository;
 import com.example.api_medecin.service.AuthService;
 import com.example.api_medecin.service.JwtService;
@@ -34,8 +35,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private JwtService jwtService;
 
-    @PostMapping("login")
-        public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+    @PostMapping(path = "connexion")
+    public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
         final Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
         );
@@ -46,13 +47,10 @@ public class AuthController {
         return null;
     }
 
-    @PostMapping("register/patient")
-    public ResponseEntity<?> register(@RequestBody PatientRegisterRequest user) {
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
-        }
-        AuthResponse authResponse = authService.registerPatient(user);
-        return ResponseEntity.ok(authResponse);
+    @PostMapping(path = "inscription")
+    public void inscription(@RequestBody User utilisateur) {
+        // log.info("Inscription");
+        this.utilisateurService.inscription(utilisateur);
     }
     
 

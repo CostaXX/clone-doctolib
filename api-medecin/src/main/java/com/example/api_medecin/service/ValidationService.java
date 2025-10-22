@@ -21,7 +21,7 @@ public class ValidationService {
     private ValidationRepository validationRepository;
     private NotificationService notificationService;
 
-    public void enregistrer(User utilisateur) throws MessagingException {
+    public void enregistrer(User utilisateur){
         Validation validation = new Validation();
         validation.setUtilisateur(utilisateur);
         Instant creation = Instant.now();

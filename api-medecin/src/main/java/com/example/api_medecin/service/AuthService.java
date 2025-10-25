@@ -42,7 +42,7 @@ public class AuthService implements UserDetailsService{
     private final PatientRepository patientRepository;
     private final MedecinRepository medecinRepository;
     private final JwtEncoder jwtEncoder;
-    private ValidationService validationService;
+    private final  ValidationService validationService;
 
     public void inscription(User utilisateur){
 

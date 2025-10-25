@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.example.api_medecin.service.JwtFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
@@ -43,9 +44,10 @@ public class ConfigurationSecuriteApplication{
                         .authorizeHttpRequests(
                                 authorize ->
                                         authorize
-                                                .requestMatchers(POST,"/inscription").permitAll()
-                                                .requestMatchers(POST,"/activation").permitAll()
-                                                .requestMatchers(POST,"/connexion").permitAll()
+                                                .requestMatchers(POST,"/api/v1/inscription").permitAll()
+                                                .requestMatchers(POST,"/api/v1/activation").permitAll()
+                                                .requestMatchers(POST,"/api/v1/connexion").permitAll()
+                                                .requestMatchers(GET,"/api/v1/helloWorld").permitAll()
                                                 .anyRequest().authenticated()
                         )
                         .sessionManagement(httpSecuritySessionManagementConfigurer ->

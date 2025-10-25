@@ -4,18 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api_medecin.dto.request.AuthentificationDTO;
-
-import com.example.api_medecin.dto.request.PatientRegisterRequest;
-
-import com.example.api_medecin.dto.response.AuthResponse;
+import com.example.api_medecin.model.Medecin;
+import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.User;
-import com.example.api_medecin.repository.UserRepository;
 import com.example.api_medecin.service.AuthService;
 import com.example.api_medecin.service.JwtService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,11 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
-    private final UserRepository userRepository;
+
     private final AuthService utilisateurService;
     private final AuthenticationManager authenticationManager;
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     @PostMapping(path = "connexion")
     public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
@@ -49,8 +44,17 @@ public class AuthController {
 
     @PostMapping(path = "inscription")
     public void inscription(@RequestBody User utilisateur) {
+        if (utilisateur instanceof Medecin) {
+        Medecin medecin = (Medecin) utilisateur;
+        this.utilisateurService.inscription(medecin);
+        // traiter le medecin
+    } else if (utilisateur instanceof Patient) {
+        Patient patient = (Patient) utilisateur;
+        this.utilisateurService.inscription(patient);
+        // traiter le patient
+    }
         // log.info("Inscription");
-        this.utilisateurService.inscription(utilisateur);
+        
     }
     
 
@@ -60,12 +64,6 @@ public class AuthController {
         
         return entity;
     }
-    
-
-    // @PostMapping("logout")
-    // public ResponseEntity<MessageResponse> logout(HttpServletRequest request) {
-    //     return new String();
-    // }
 
     @PostMapping(path = "activation")
     public void activation(@RequestBody Map<String, String> activation) {

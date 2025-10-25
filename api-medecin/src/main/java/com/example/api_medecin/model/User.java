@@ -12,8 +12,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+
 import jakarta.persistence.*;
 
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type" // champ dans ton JSON pour indiquer le type
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Medecin.class, name = "medecin"),
+    @JsonSubTypes.Type(value = Patient.class, name = "patient")
+})
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User implements UserDetails{
@@ -42,8 +55,7 @@ public abstract class User implements UserDetails{
     @NotBlank(message = "Mot de passe obligatoire")
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
     private Role role;
 
     private boolean actif = false;

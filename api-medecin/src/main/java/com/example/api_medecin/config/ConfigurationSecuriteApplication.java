@@ -47,7 +47,7 @@ public class ConfigurationSecuriteApplication{
                                                 .requestMatchers(POST,"/api/v1/inscription").permitAll()
                                                 .requestMatchers(POST,"/api/v1/activation").permitAll()
                                                 .requestMatchers(POST,"/api/v1/connexion").permitAll()
-                                                .requestMatchers(GET,"/api/v1/helloWorld").permitAll()
+                                                .requestMatchers(POST,"/api/v1/refresh-token").permitAll()
                                                 .anyRequest().authenticated()
                         )
                         .sessionManagement(httpSecuritySessionManagementConfigurer ->

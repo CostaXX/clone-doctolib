@@ -17,6 +17,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 
 
@@ -42,32 +46,42 @@ public class AuthController {
         return null;
     }
 
+    @PostMapping(path = "deconnexion")
+    public void deconnexion() {
+        this.jwtService.deconnexion();
+    }
+
     @PostMapping(path = "inscription")
     public void inscription(@RequestBody User utilisateur) {
-        if (utilisateur instanceof Medecin) {
+    if (utilisateur instanceof Medecin) {
         Medecin medecin = (Medecin) utilisateur;
         this.utilisateurService.inscription(medecin);
-        // traiter le medecin
+
     } else if (utilisateur instanceof Patient) {
         Patient patient = (Patient) utilisateur;
         this.utilisateurService.inscription(patient);
-        // traiter le patient
+
     }
         // log.info("Inscription");
         
     }
-    
 
-    @PostMapping("register/medecin")
-    public String postMethodName(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return entity;
+    @GetMapping("helloWorld")
+    public String getMethodName(@RequestParam Map<String, String> param) {
+        return new String();
     }
+    
 
     @PostMapping(path = "activation")
     public void activation(@RequestBody Map<String, String> activation) {
         this.utilisateurService.activation(activation);
-    }    
+    }
+
+    @PostMapping(path = "refresh-token")
+    public @ResponseBody Map<String, String> refreshToken(@RequestBody Map<String, String> refreshTokenRequest) {
+        return this.jwtService.refreshToken(refreshTokenRequest);
+    }
+
+    
     
 }

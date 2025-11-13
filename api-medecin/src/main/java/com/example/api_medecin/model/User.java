@@ -1,6 +1,8 @@
 package com.example.api_medecin.model;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.validation.constraints.Email;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import jakarta.persistence.*;
 
+@Getter
+@Setter
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,

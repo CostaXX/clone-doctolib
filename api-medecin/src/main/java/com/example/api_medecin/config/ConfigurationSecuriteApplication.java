@@ -48,6 +48,8 @@ public class ConfigurationSecuriteApplication{
                                                 .requestMatchers(POST,"/api/v1/activation").permitAll()
                                                 .requestMatchers(POST,"/api/v1/connexion").permitAll()
                                                 .requestMatchers(POST,"/api/v1/refresh-token").permitAll()
+                                                .requestMatchers(GET, "/bot/chat").permitAll()
+                                                .requestMatchers(GET, "/bot/chat/all").permitAll()
                                                 .anyRequest().authenticated()
                         )
                         .sessionManagement(httpSecuritySessionManagementConfigurer ->

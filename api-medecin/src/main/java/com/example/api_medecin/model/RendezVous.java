@@ -10,7 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "rendez_vous")
 public class RendezVous {
@@ -31,6 +35,10 @@ public class RendezVous {
     private Patient patient;
 
     // Getters and Setters
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
     public LocalDateTime getDateHeure() {
         return dateHeure;

@@ -3,9 +3,15 @@ package com.example.api_medecin.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.RendezVous;
+import com.example.api_medecin.service.JwtService;
+import com.example.api_medecin.service.RendezVousService;
+import com.example.api_medecin.repository.RendezVousRepository;
+import com.example.api_medecin.repository.UserRepository;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +27,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/rendezvous")
+@RequiredArgsConstructor
 public class RendezVousController {
+
+    private final JwtService jwtService;
+    private final RendezVousService rendezVousService;
+
+
+
+    @PutMapping("/{rendezVousId}")
+    public void getRendezVousWithMedecin(@PathVariable long rendezVousId, HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String emailUsername = jwtService.extractUsername(authHeader.substring(7));
+        rendezVousService.GetRendezVous(emailUsername, rendezVousId);
+    }
+    
 
 }

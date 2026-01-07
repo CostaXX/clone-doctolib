@@ -2,7 +2,7 @@ il faut avoir installer :
 
 - docker
 - maven
-- java
+- java jdk24
 
 pour lancer ce projet il vous suffit de lancer le conteneur docker avec
 

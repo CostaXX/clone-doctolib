@@ -1,20 +1,200 @@
 .hero{
- display: grid;
+  display: grid;
   grid-template-columns: 1fr 1fr; /* deux colonnes, gauche et droite */
   align-items: center; /* pour bien centrer verticalement si besoin */
   gap: 2rem; /* espace entre gauche et droite */
+  padding-block: 50px;
+  padding-inline: 100px;
+  background-color: aliceblue;
 }
 
+h1 {
+  margin-block-end: 1.25rem;
+}
 
+h1 span {
+  color: #155dfc;;
+}
+
+.btnAction{
+  background-color: #000000;
+  color: white;
+  border-radius: 7px;
+}
+
+a {
+    padding: 15px 20px;
+}
+
+.actionsHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-block-end: 1rem;
+}
+
+.cardMar {
+  width: 100%;
+  height: calc(0.25rem * 96);
+  background: url(../../assets/photo-hero.jpg);
+  background-size: cover;
+  box-shadow: 0px 2px 8px #5d5d5d;
+  border-radius: 16px;
+  position: relative;
+  margin-left: 100px
+}
+
+.btnMedecin{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #e2e2e2;
+    border-radius: 7px;
+}
+
+.photoHero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.sectionLeftHero{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.sectionLeftHero p {
+  color : oklch(.446 .03 256.802);
+  font-size: 1.25rem;
+  
+}
+
+.paragraphHero{
+  margin-block-end: 1.25rem;
+}
+
+.iconeMar span {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-block: 10px;
+}
+
+.iconeMar p {
+  color: oklch(.446 .03 256.802);
+  font-size: 0.9rem;
+}
+
+.supportIconeMar {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+  justify-content: center;
+}
+
+.iconeMar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.iconeMar svg {
+  padding: 10px;
+  width: 50px;
+  // background-color: rgba(21, 93, 252, var(--opacity-icone-hero));
+  height: 50px;
+  border-radius: 50px;
+}
+
+.iconeSatisfied {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+  border-radius: 16px;
+  
+  bottom: -25px;
+  left: -75px;
+  box-shadow: 0px 2px 5px #5d5d5d;
+}
+
+.horloge {
+  color: oklch(.546 .245 262.881);
+  background-color: oklch(.932 .032 255.585);
+}
+
+.bouclier {
+  color: oklch(.627 .194 149.214);
+  background-color: oklch(.962 .044 156.743);
+}
+
+.personne {
+  color: oklch(.558 .288 302.321);
+  background-color: oklch(.946 .033 307.174);
+}
+
+.patient {
+  margin-right: 5px;
+  padding: 10px;
+  width: 50px;
+  background-color:oklch(.932 .032 255.585);
+  color: oklch(.546 .245 262.881);
+  height: 50px;
+  border-radius: 50px;
+}
+
+ .actionsHero a{
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  width: 400px;
+  text-align: center;
+  margin-block: 15px;
+}
 
 @media (max-width: 768px) {
+  .cardMar {
+    height: calc(0.25rem * 64);
+    margin: 0px 80px;
+  }
+
  .hero{
+  padding-inline: 10px;
   grid-template-columns: 1fr;
   gap: 2rem;
   align-items: center;
  }
 
+ .actionsHero {
+  flex-direction: column;
+  align-items: center;
+ }
+
+ .actionsHero a {
+  width: 100%;
+  margin-bottom: 20px;
+  padding-block: 20px;
+ }
+
  .photoHero {
   grid-column: 1; /* force l’élément dans la 2ème colonne */
+ }
 }
+
+@media (max-width: 540px) {
+  .supportIconeMar {
+    flex-direction: column;
+  }
+
+  .cardMar {
+    margin: 0px 40px;
+  }
+
+  .iconeSatisfied {
+    left: -40px;
+  }
 }

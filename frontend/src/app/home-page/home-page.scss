@@ -1,3 +1,42 @@
 app-hero{
     margin-inline: auto;
 }
+
+.containerInternStatistic{
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 30px;
+    text-align: center;
+}
+
+.containerInternStatistic div:nth-child(1) h2{
+    color: #155dfc;
+}
+
+.containerInternStatistic div:nth-child(2) h2{
+    color: #00a447
+}
+
+.containerInternStatistic div:nth-child(3) h2{
+    color: #9810fa;
+}
+
+.containerInternStatistic div:nth-child(4) h2{
+    color: oklch(.646 .222 41.116);
+}
+
+.containerInternStatistic p{
+    color: #4a5565;
+}
+
+@media (max-width: 540px) {
+    .containerInternStatistic{
+        flex-direction: column;
+        gap: 20px;
+        
+    }
+
+    .containerInternStatistic div {
+        margin-block: 30px;
+    }
+}

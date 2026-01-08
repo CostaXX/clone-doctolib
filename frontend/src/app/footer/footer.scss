@@ -1,0 +1,48 @@
+.legal{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+    color: oklch(.707 .022 261.325);
+}
+
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+li{
+        margin-block-end: 0.7rem;
+}
+
+.legal section:nth-child(1) p{
+    line-height: 28px;
+}
+
+h3{
+    color: #fff;
+}
+
+h4{
+    color: #fff;
+}
+
+h3, h4{
+    margin-block-end: 1rem;
+}
+
+.footer-bottom{
+    margin-block-start: 3rem;
+    padding-block-start: 2rem;
+    border-top: 1px solid oklch(.707 .022 261.325);
+    display: flex;
+    justify-content: center;
+    color: oklch(.707 .022 261.325);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 968px) {
+    .legal{
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}

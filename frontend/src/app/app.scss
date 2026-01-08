@@ -13,3 +13,17 @@ router-outlet{
     display: block;
     // min-height: calc(100vh - 60px); /* pour s’assurer que le contenu prend au moins toute la hauteur visible */
 }
+
+app-footer{
+    display: block;
+    padding-block: 40px;
+    padding-inline: 100px;
+    width: 100%;
+    background-color: oklch(.21 .034 264.665);
+}
+
+@media (max-width: 968px) {
+    app-footer{
+        padding-inline: 30px;
+    }
+}

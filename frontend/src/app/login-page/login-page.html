@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="image">
+        <div class="text">
+            <h5>Rejoignez MédecinRDV</h5>
+            <p>Gérez facilement tous vos rendez-vous médicaux en un seul endroit. Gagnez du temps et simplifiez vos démarches de santé.</p>
+        </div>
+    </div>
+    <form class="login-card" action="">
+        <h2>Connexion</h2>
+        <p class="subtitle">Connectez-vous pour accéder à votre espace personnel</p>
+
+        <label for="email">Email</label>
+        <div class="form-group input-with-icon">
+            <span class="icon">✉️</span>
+            <input id="email" #emailInput name="email" type="email" placeholder="exemple@email.com" />
+        </div>
+
+        <label for="password">Mot de passe</label>
+        <div class="form-group input-with-icon">
+            <span class="icon">🔒</span>
+            <input id="password" #passwordInput name="password" type="password" placeholder="••••••••" />
+            <button type="button" #showPassBtn (click)="togglePassword()" class="show-pass" aria-label="Afficher le mot de passe">👁️</button>
+        </div>
+
+        <div class="form-actions">
+            <label class="remember"><input type="checkbox" name="remember" /> Se souvenir de moi</label>
+            <a class="forgot" href="#">Mot de passe oublié ?</a>
+        </div>
+
+        <button class="btn-primary" #submitInput (click)="login($event)" type="submit">Se connecter</button>
+
+        <div class="separator"><span>ou</span></div>
+
+        <p class="signup">Vous n'avez pas de compte ? <a href="#">Créer un compte</a></p>
+    </form>
+</div>

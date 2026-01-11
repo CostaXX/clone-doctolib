@@ -36,7 +36,7 @@ public class JwtService {
     public static final String BEARER = "Bearer ";
     public static final String REFRESH = "refresh";
     public static final String TOKEN_INVALIDE = "Token invalide";
-    private final String ENCRIPTION_KEY = "608f36e92dc66d97d5933f0e6371493cb4fc05b1aa8f8de64014732472303a7c";
+    private final String ENCRIPTION_KEY = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3g=";
     private AuthService utilisateurService;
     private JwtRepository jwtRepository;
 

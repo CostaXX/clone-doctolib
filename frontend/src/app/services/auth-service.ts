@@ -9,7 +9,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(data: { email: string; password: string }) {
+  login(data: { username: string; password: string }) {
     return this.http.post<any>(`${this.apiUrl}/connexion`, data);
   }
 

@@ -34,17 +34,17 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    @PostMapping(path = "connexion")
-    public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
-        final Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
-        );
+        @PostMapping(path = "connexion")
+        public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+            final Authentication authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
+            );
 
-        if(authenticate.isAuthenticated()) {
-            return this.jwtService.generate(authentificationDTO.username());
+            if(authenticate.isAuthenticated()) {
+                return this.jwtService.generate(authentificationDTO.username());
+            }
+            return null;
         }
-        return null;
-    }
 
     @PostMapping(path = "deconnexion")
     public void deconnexion() {

@@ -29,7 +29,7 @@ export class LoginPage {
     event.preventDefault();
     // event
     this.authService.login({
-      email: this.emailInput.nativeElement.value,
+      username: this.emailInput.nativeElement.value,
       password: this.passwordInput.nativeElement.value}).subscribe({
         next: (response) => {
           console.log('Login successful:', response);

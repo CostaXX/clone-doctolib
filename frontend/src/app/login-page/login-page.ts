@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { AuthService } from '../services/auth-service';
+import { AuthService } from '../core/services/auth-service';
 import { RouterLink } from '@angular/router';
 
 

@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from './header/header';
-import { Footer } from './footer/footer';
+import { Header } from './core/components/header/header';
+import { Footer } from './core/components/footer/footer';
+import { CoreModule } from './core/core-module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Header,Footer],
+  imports: [CoreModule,RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

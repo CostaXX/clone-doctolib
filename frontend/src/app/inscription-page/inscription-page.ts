@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild  } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { InscriptionService } from '../services/inscription-service';
+import { InscriptionService } from '../core/services/inscription-service';
 
 
 @Component({

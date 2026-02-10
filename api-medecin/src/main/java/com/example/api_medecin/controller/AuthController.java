@@ -33,10 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-
-
-
-
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor

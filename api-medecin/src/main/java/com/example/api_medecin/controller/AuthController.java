@@ -7,12 +7,22 @@ import com.example.api_medecin.dto.request.AuthentificationDTO;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.User;
+import com.example.api_medecin.repository.UserRepository;
 import com.example.api_medecin.service.AuthService;
 import com.example.api_medecin.service.JwtService;
+import com.example.api_medecin.service.ValidationService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
 
@@ -33,16 +45,28 @@ public class AuthController {
     private final AuthService utilisateurService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ValidationService validationService;
+    private final UserRepository userRepository;
 
         @PostMapping(path = "connexion")
-        public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
-            final Authentication authenticate = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
-            );
+        public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {        
+            try {
 
-            if(authenticate.isAuthenticated()) {
-                return this.jwtService.generate(authentificationDTO.username());
+                final Authentication authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
+                );
+
+                if(authenticate.isAuthenticated()) {
+                    return this.jwtService.generate(authentificationDTO.username());
+                }
+            } catch (LockedException e) {
+                User user = userRepository.findByEmail(authentificationDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                validationService.supprimer(user);
+                validationService.enregistrer(user);
             }
+
+            
+            
             return null;
         }
 
@@ -76,6 +100,7 @@ public class AuthController {
     public void activation(@RequestBody Map<String, String> activation) {
         this.utilisateurService.activation(activation);
     }
+    
 
     @PostMapping(path = "refresh-token")
     public @ResponseBody Map<String, String> refreshToken(@RequestBody Map<String, String> refreshTokenRequest) {

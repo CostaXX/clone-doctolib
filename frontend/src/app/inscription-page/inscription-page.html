@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="image">
+        <div class="text">
+            <h5>Rejoignez MédecinRDV</h5>
+            <p>Gérez facilement tous vos rendez-vous médicaux en un seul endroit. Gagnez du temps et simplifiez vos démarches de santé.</p>
+        </div>
+    </div>
+    <form class="login-card" action="">
+        <h2>Inscription</h2>
+        <!-- <p class="subtitle">Connectez-vous pour accéder à votre espace personnel</p> -->
+
+
+        <div class="double-inputs-columns-grid">
+            <div>
+                <label for="nom">Nom</label>
+                <div class="form-group input-with-icon">
+                    <span class="icon">👤</span>
+                    <input id="nom" #nomInput name="nom" type="text" placeholder="votre nom" />
+                </div>
+            </div>
+            <div>
+                <label for="prenom">Prénom</label>
+                <div class="form-group input-with-icon">
+                    <span class="icon">👤</span>
+                    <input id="prenom" #prenomInput name="prenom" type="text" placeholder="votre prénom" />
+                </div>
+            </div>
+        </div>
+
+        <div class="double-inputs-columns-grid">
+            <div>
+                <label for="date">Date de naissance</label>
+                <div class="form-group input-with-icon">
+                    <span class="icon">📅</span>
+                    <input id="date" #dateNaissanceInput name="date" type="date" />
+                </div>
+            </div>
+            <div>
+                <label for="sexe">Sexe</label>
+                <div class="form-group input-with-icon sexe">
+                    <span class="icon">⚧️</span>
+                    <select id="sexe" #sexeInput name="sexe">
+                        <option value="" disabled selected>Choisir</option>
+                        <option value="0">Femme</option>
+                        <option value="1">Homme</option>
+                        <option value="2">Autre</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <label for="email">Email</label>
+        <div class="form-group input-with-icon">
+            <span class="icon">✉️</span>
+            <input id="email" #emailInput name="username" type="email" placeholder="exemple@email.com" />
+        </div>
+
+        <label for="password">Mot de passe</label>
+        <div class="form-group input-with-icon">
+            <span class="icon">🔒</span>
+            <input id="password" #passwordInput name="password" type="password" placeholder="••••••••" />
+            <button type="button" #showPassBtn (click)="togglePassword()" class="show-pass" aria-label="Afficher le mot de passe">👁️</button>
+        </div>
+
+        <label for="telephone">Téléphone</label>
+        <div class="form-group input-with-icon">
+            <span class="icon">📱</span>
+            <input id="telephone" #telephoneInput name="telephone" type="tel" placeholder="votre numéro de téléphone" maxlength="10"/>
+        </div>
+
+        <input type="hidden" #typeInput name="type" value="patient" />
+
+        <button class="btn-primary" #submitInput (click)="inscription($event)" type="submit">S'inscrire</button>
+
+        <div class="separator"><span>ou</span></div>
+
+        <p class="signup">Vous avez un compte ? <a routerLink="/login">Se connecter</a></p>
+    </form>
+</div>

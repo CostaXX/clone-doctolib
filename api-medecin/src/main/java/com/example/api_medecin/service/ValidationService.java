@@ -8,6 +8,7 @@ import com.example.api_medecin.model.Validation;
 import com.example.api_medecin.repository.ValidationRepository;
 
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 import java.time.Instant;
 import java.util.Random;
@@ -16,6 +17,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class ValidationService {
 
     private ValidationRepository validationRepository;
@@ -26,7 +28,7 @@ public class ValidationService {
         validation.setUtilisateur(utilisateur);
         Instant creation = Instant.now();
         validation.setCreation(creation);
-        Instant expiration = creation.plus(10, MINUTES);
+        Instant expiration = creation.plus(1, MINUTES);
         validation.setExpiration(expiration);
         Random random = new Random();
         int randomInteger = random.nextInt(999999);
@@ -35,6 +37,10 @@ public class ValidationService {
         validation.setCode(code);
         this.validationRepository.save(validation);
         this.notificationService.envoyer(validation);
+    }
+
+    public void supprimer(User utilisateur){
+        this.validationRepository.deleteByUtilisateur(utilisateur);
     }
 
     public Validation lireEnFonctionDuCode(String code) {

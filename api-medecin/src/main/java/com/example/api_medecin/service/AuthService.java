@@ -42,7 +42,7 @@ public class AuthService implements UserDetailsService{
     private final PatientRepository patientRepository;
     private final MedecinRepository medecinRepository;
     private final JwtEncoder jwtEncoder;
-    private final  ValidationService validationService;
+    private final ValidationService validationService;
 
     public void inscription(User utilisateur){
 
@@ -84,6 +84,7 @@ public class AuthService implements UserDetailsService{
     public void activation(Map<String, String> activation) {
         Validation validation = this.validationService.lireEnFonctionDuCode(activation.get("code"));
         if(Instant.now().isAfter(validation.getExpiration())){
+            validationService.supprimer(validation.getUtilisateur());
             throw  new RuntimeException("Votre code a expiré");
         }
         User utilisateurActiver = this.userRepository.findById(validation.getUtilisateur().getId()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));

@@ -1,9 +1,11 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth-service';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-login-page',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss'
 })
@@ -11,8 +13,7 @@ export class LoginPage {
   @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
   @ViewChild('showPassBtn') showPassBtn!: ElementRef<HTMLButtonElement>;
-  @ViewChild('submitInput') submitInput!: ElementRef<HTMLButtonElement>;
-
+  
   
   passwordVisible = false;
 
@@ -36,11 +37,7 @@ export class LoginPage {
           this.authService.saveToken(response.token);
         }
       });
-      
-    // console.log(this.emailInput.nativeElement.value);
-    // console.log(this.passwordInput.nativeElement.value);
     
-    // this.submitInput.nativeElement.click();
   }
 
 }

@@ -5,20 +5,20 @@
             <p>Gérez facilement tous vos rendez-vous médicaux en un seul endroit. Gagnez du temps et simplifiez vos démarches de santé.</p>
         </div>
     </div>
-    <form class="login-card" action="">
+    <form class="login-card" (ngSubmit)="onSubmit()">
         <h2>Connexion</h2>
         <p class="subtitle">Connectez-vous pour accéder à votre espace personnel</p>
 
         <label for="email">Email</label>
         <div class="form-group input-with-icon">
             <span class="icon">✉️</span>
-            <input id="email" #emailInput name="username" type="email" placeholder="exemple@email.com" />
+            <input id="email" [(ngModel)]="username" name="username" type="email" placeholder="exemple@email.com" />
         </div>
 
         <label for="password">Mot de passe</label>
         <div class="form-group input-with-icon">
             <span class="icon">🔒</span>
-            <input id="password" #passwordInput name="password" type="password" placeholder="••••••••" />
+            <input id="password" [(ngModel)]="password" name="password" type="password" placeholder="••••••••" />
             <button type="button" #showPassBtn (click)="togglePassword()" class="show-pass" aria-label="Afficher le mot de passe">👁️</button>
         </div>
 
@@ -27,7 +27,7 @@
             <a class="forgot" href="#">Mot de passe oublié ?</a>
         </div>
 
-        <button class="btn-primary" #submitInput (click)="login($event)" type="submit">Se connecter</button>
+        <button class="btn-primary" type="submit">Se connecter</button>
 
         <div class="separator"><span>ou</span></div>
 

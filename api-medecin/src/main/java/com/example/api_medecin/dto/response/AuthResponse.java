@@ -1,43 +1,33 @@
 package com.example.api_medecin.dto.response;
 
+import java.util.Map;
+
+import com.example.api_medecin.model.User;
+
 public class AuthResponse {
-    private String email;
-    private String role;
-    private String accessToken;
-    private String refreshToken;
-
-    // Constructeurs
+    private Object user;
+    private Map<String, String> tokens;  // Les tokens (optionnel si en cookies)
+    
     public AuthResponse() {}
-
-    public AuthResponse(String accessToken, String refreshToken, String email, String role) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.email = email;
-        this.role = role;
+    
+    public AuthResponse(Object user, Map<String, String> tokens) {
+        this.user = user;
+        this.tokens = tokens;
     }
-
-    // Getters et Setters
-
-    public String getEmail() {
-        return email;
+    
+    public Object getUser() {
+        return user;
     }
-
-    public String getRole() {
-        return role;
+    
+    public void setUser(Object user) {
+        this.user = user;
     }
-
-    public String getAccessToken() {
-        return accessToken;
+    
+    public Map<String, String> getTokens() {
+        return tokens;
     }
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    
+    public void setTokens(Map<String, String> tokens) {
+        this.tokens = tokens;
     }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
 }

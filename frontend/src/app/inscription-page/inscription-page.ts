@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild  } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RedirectCommand, RouterLink } from '@angular/router';
 import { InscriptionService } from '../core/services/inscription-service';
 
 
@@ -48,6 +48,8 @@ export class InscriptionPage {
     }).subscribe({
       next: (response) => {
         console.log('Inscription successful:', response);
+        // Rediriger vers la page de connexion après une inscription réussie
+        window.location.href = '/login';
       }
     });
     

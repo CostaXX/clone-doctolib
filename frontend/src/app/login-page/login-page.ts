@@ -1,11 +1,15 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { AuthService } from '../core/services/auth-service';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+
 
 
 @Component({
   selector: 'app-login-page',
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss'
 })
@@ -17,7 +21,11 @@ export class LoginPage {
   
   passwordVisible = false;
 
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+    username = '';
+    password = '';
 
   togglePassword(): void {
     const input = this.passwordInput.nativeElement;
@@ -26,18 +34,16 @@ export class LoginPage {
     this.showPassBtn.nativeElement.setAttribute('aria-pressed', String(this.passwordVisible));
   }
 
-  login(event: Event): void {
-    event.preventDefault();
-    // event
-    this.authService.login({
-      username: this.emailInput.nativeElement.value,
-      password: this.passwordInput.nativeElement.value}).subscribe({
-        next: (response) => {
-          console.log('Login successful:', response);
-          this.authService.saveToken(response.token);
-        }
-      });
-    
+  onSubmit() {
+    this.authService.login(this.username, this.password).subscribe({
+      next: () => {
+        console.log('Logged in successfully');
+        this.router.navigateByUrl('/login');
+      },
+      error: (error: HttpErrorResponse) => {  
+        console.error('Login failed', error);
+        // Afficher un message d'erreur à l'utilisateur
+      }
+    });
   }
-
 }

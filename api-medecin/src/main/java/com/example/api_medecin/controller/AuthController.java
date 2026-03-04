@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api_medecin.dto.request.AuthentificationDTO;
+import com.example.api_medecin.dto.response.AuthResponse;
 import com.example.api_medecin.model.Medecin;
 import com.example.api_medecin.model.Patient;
 import com.example.api_medecin.model.User;
@@ -45,7 +46,7 @@ public class AuthController {
     private final UserRepository userRepository;
 
         @PostMapping(path = "connexion")
-        public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {        
+        public AuthResponse connexion(@RequestBody AuthentificationDTO authentificationDTO) {        
             try {
 
                 final Authentication authenticate = authenticationManager.authenticate(
@@ -53,7 +54,10 @@ public class AuthController {
                 );
 
                 if(authenticate.isAuthenticated()) {
-                    return this.jwtService.generate(authentificationDTO.username());
+                    Object user = userRepository.findUserInfoByEmail(authentificationDTO.username());
+                    Map<String, String> lesTokens = this.jwtService.generate(authentificationDTO.username());
+                    
+                    return new AuthResponse(user, lesTokens);
                 }
             } catch (LockedException e) {
                 User user = userRepository.findByEmail(authentificationDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));

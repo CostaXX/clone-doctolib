@@ -48,8 +48,8 @@ export class InscriptionPage {
     }).subscribe({
       next: (response) => {
         console.log('Inscription successful:', response);
-        // Rediriger vers la page de connexion après une inscription réussie
-        window.location.href = '/login';
+        // Rediriger vers la page de validation après une inscription réussie
+        window.location.href = '/validation';
       }
     });
     

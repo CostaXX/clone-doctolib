@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -55,9 +56,20 @@ public class AuthController {
 
                 if(authenticate.isAuthenticated()) {
                     Object user = userRepository.findUserInfoByEmail(authentificationDTO.username());
-                    Map<String, String> lesTokens = this.jwtService.generate(authentificationDTO.username());
+                    ResponseCookie cookieToken = ResponseCookie.from("token", jwtService.generate(authentificationDTO.username()).get(JwtService.BEARER))
+                        .httpOnly(true)
+                        .path("/")
+                        .build();
+                    ResponseCookie cookieRefreshToken = ResponseCookie.from("refreshToken", jwtService.generate(authentificationDTO.username()).get(JwtService.REFRESH))
+                        .httpOnly(true)
+                        .path("/")
+                        .build();
                     
-                    return new AuthResponse(user, lesTokens);
+                    return ResponseEntity.ok()
+                        .header("Set-Cookie", cookieToken.toString())
+                        .header("Set-Cookie", cookieRefreshToken.toString())
+                        .body(new AuthResponse(user))
+                        .getBody();
                 }
             } catch (LockedException e) {
                 User user = userRepository.findByEmail(authentificationDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));

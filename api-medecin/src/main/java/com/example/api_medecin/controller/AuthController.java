@@ -47,7 +47,7 @@ public class AuthController {
     private final UserRepository userRepository;
 
         @PostMapping(path = "connexion")
-        public AuthResponse connexion(@RequestBody AuthentificationDTO authentificationDTO) {        
+        public ResponseEntity<AuthResponse>  connexion(@RequestBody AuthentificationDTO authentificationDTO) {        
             try {
 
                 final Authentication authenticate = authenticationManager.authenticate(
@@ -56,20 +56,14 @@ public class AuthController {
 
                 if(authenticate.isAuthenticated()) {
                     Object user = userRepository.findUserInfoByEmail(authentificationDTO.username());
-                    ResponseCookie cookieToken = ResponseCookie.from("token", jwtService.generate(authentificationDTO.username()).get(JwtService.BEARER))
-                        .httpOnly(true)
-                        .path("/")
-                        .build();
                     ResponseCookie cookieRefreshToken = ResponseCookie.from("refreshToken", jwtService.generate(authentificationDTO.username()).get(JwtService.REFRESH))
                         .httpOnly(true)
                         .path("/")
                         .build();
                     
                     return ResponseEntity.ok()
-                        .header("Set-Cookie", cookieToken.toString())
                         .header("Set-Cookie", cookieRefreshToken.toString())
-                        .body(new AuthResponse(user))
-                        .getBody();
+                        .body(new AuthResponse(user));
                 }
             } catch (LockedException e) {
                 User user = userRepository.findByEmail(authentificationDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));

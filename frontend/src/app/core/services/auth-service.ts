@@ -12,6 +12,7 @@ export class AuthService {
   private _currentUser = signal<LoginResponse | null>(null)
   currentUser = this._currentUser.asReadonly()
   isConnected = computed(() => this.currentUser() !== null)
+  getNom = computed(() => this.currentUser()?.user.nom || null)
 
   
 

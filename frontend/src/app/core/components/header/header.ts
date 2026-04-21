@@ -1,16 +1,20 @@
-import { Component, ViewChild, ElementRef  } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject  } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule],
+  imports: [RouterModule, AuthService],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
 export class Header {
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService) {
+    
+  }
+
+  authService = inject(AuthService);
 
   @ViewChild('maDiv') maDiv!: ElementRef;
   showOverlay(): void {

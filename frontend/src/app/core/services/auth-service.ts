@@ -13,6 +13,8 @@ export class AuthService {
   currentUser = this._currentUser.asReadonly()
   isConnected = computed(() => this.currentUser() !== null)
 
+  
+
   login(username: string, password: string): Observable<{
     user: LoginResponse
   }> {

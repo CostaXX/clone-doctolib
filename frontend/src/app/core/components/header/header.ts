@@ -19,7 +19,7 @@ export class Header {
     console.log('Current user on header init:', this.auth.currentUser()?.user.nom);
   }
   authService = inject(AuthService);
-  user = this.authService.currentUser()?.user.nom;
+  user = this.authService.currentUser;
 
   @ViewChild('maDiv') maDiv!: ElementRef;
   showOverlay(): void {

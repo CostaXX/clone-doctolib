@@ -10,15 +10,13 @@ import { LoginResponse } from '../models/login-response';
 export class AuthService {
   private http = inject(HttpClient)
   private _currentUser = signal<LoginResponse | null>(null)
-  currentUser = this._currentUser.asReadonly()
-  isConnected = computed(() => this.currentUser() !== null)
-  getNom = computed(() => this.currentUser()?.user.nom || null)
 
   
 
   login(username: string, password: string): Observable<{
     user: LoginResponse
-  }> {
+  }> 
+  {
     return this.http.post<{
     user: LoginResponse
   }>('http://localhost:8081/api/v1/connexion', { username, password }, { withCredentials: true })
@@ -31,7 +29,7 @@ export class AuthService {
           
           console.log(typeof response.user); // Devrait être une chaîne de caractères
           console.log('Login successful, user data:', response);
-          console.log('Current user state after login:', this.currentUser());
+          
         })
       );
   }

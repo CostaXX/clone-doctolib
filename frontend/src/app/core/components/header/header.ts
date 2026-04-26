@@ -11,15 +11,9 @@ import { AuthService } from '../../services/auth-service';
 })
 export class Header {
 
-  constructor(public auth: AuthService) {
-    
-  }
 
-  ngonInit() {
-    console.log('Current user on header init:', this.auth.currentUser()?.user.nom);
-  }
   authService = inject(AuthService);
-  user = this.authService.currentUser;
+
 
   @ViewChild('maDiv') maDiv!: ElementRef;
   showOverlay(): void {

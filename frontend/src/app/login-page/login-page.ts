@@ -36,7 +36,8 @@ export class LoginPage {
 
   onSubmit() {
     this.authService.login(this.username, this.password).subscribe({
-      next: () => {
+      next: (response) => {
+        this.authService.saveAuthToken(response); // Stockez le token réel reçu du backend
         console.log('Logged in successfully');
         this.router.navigateByUrl('/login');
       },

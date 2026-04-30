@@ -9,29 +9,18 @@ import { LoginResponse } from '../models/login-response';
 })
 export class AuthService {
   private http = inject(HttpClient)
-  private _currentUser = signal<LoginResponse | null>(null)
+  private _isConnected = signal(!!this.getAuthToken());
+  isConnected = this._isConnected.asReadonly();
 
   
 
-  login(username: string, password: string): Observable<{
-    user: LoginResponse
-  }> 
-  {
-    return this.http.post<{
-    user: LoginResponse
-  }>('http://localhost:8081/api/v1/connexion', { username, password }, { withCredentials: true })
-      .pipe(
-        tap(response => {
-          // Les deux tokens sont automatiquement stockés dans des cookies HTTP-only
-          // Nous mettons à jour l'état de l'utilisateur connecté
-          // 
-          this._currentUser.set(response.user);
-          
-          console.log(typeof response.user); // Devrait être une chaîne de caractères
-          console.log('Login successful, user data:', response);
-          
-        })
-      );
+  login(username: string, password: string) {
+    return this.http.post<{ token: string }>('/api/login', { username, password }, { withCredentials: true })
+  }
+
+  saveAuthToken(token: string) {
+    localStorage.setItem('token', token);
+    this._isConnected.set(true);
   }
 
   // Méthode pour rafraîchir les tokens. Utilisée par l'intercepteur HTTP
@@ -45,13 +34,12 @@ export class AuthService {
       );
   }
 
-  logout(): Observable<any> {
-    return this.http.post<any>('/api/logout', {}, { withCredentials: true })
-      .pipe(
-        tap(() => {
-          // Le backend devrait supprimer les cookies
-          this._currentUser.set(null);
-        })
-      );
+  getAuthToken() {
+    return localStorage.getItem('token');
+  }
+
+  logOut() {
+    localStorage.removeItem('token');
+    this._isConnected.set(false);
   }
 }

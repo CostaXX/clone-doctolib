@@ -6,4 +6,5 @@ export interface User {
     telephone?: string;
     dateNaissance?: string;
     sexe?: number;
+    Bearer : string;
 }
